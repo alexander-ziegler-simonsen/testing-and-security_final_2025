@@ -1,0 +1,23 @@
+{
+  "name": "testing-and-security_final_2025-client",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.html",
+  "type": "module",
+  "scripts": {
+    "check": "tsc --noEmit",
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.20.0",
+  "devDependencies": {
+    "@babel/preset-typescript": "^7.28.5",
+    "dotenv": "^17.2.3",
+    "globals": "^16.5.0",
+    "http-server": "^14.1.1",
+    "typescript": "^5.9.3"
+  }
+}
