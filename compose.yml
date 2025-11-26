@@ -11,7 +11,9 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
-      - dbData:/var/lib/postgresql
+      - dbData:/var/lib/postgresql/
+      # Mount initialization scripts
+      - ./init:/docker-entrypoint-initdb.d
     ports:
       - '${POSTGRES_PORT}:5432'
     networks:
