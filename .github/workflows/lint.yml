@@ -1,0 +1,80 @@
+name: Lint client and api
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        project: [api, client]
+
+    steps:
+      - name: Start full timer
+        id: global_start
+        run: echo "GLOBAL_START=$(date +%s)" >> $GITHUB_ENV
+
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 10.20.0
+          run_install: false # I manually install later
+
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Cache pnpm store
+        uses: actions/cache@v4
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('api/pnpm-lock.yaml', 'client/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
+
+      - name: Start timer
+        id: start
+        run: echo "START=$(date +%s)" >> $GITHUB_ENV # timer inside the matix, that count from 'Install dependencies' and the end of 'Run ESLint'
+
+      - name: Install dependencies
+        working-directory: ./${{ matrix.project }}
+        run: pnpm install --frozen-lockfile # flag so it don't change the lockfile, but uses what is already there
+
+      - name: Run ESLint
+        working-directory: ./${{ matrix.project }}
+        run: |
+          if pnpm run lint; then
+            echo "LINT_RESULT=success" >> $GITHUB_ENV
+          else
+            echo "LINT_RESULT=failure" >> $GITHUB_ENV
+            exit 1
+          fi
+
+      - name: Write summary
+        if: always()
+        run: |
+          END=$(date +%s)
+          TOTAL=$(( END - GLOBAL_START ))
+          echo " -------------- -------------- -------------- -------------- " >> $GITHUB_STEP_SUMMARY
+          echo " Lint Summary for \`${{ matrix.project }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Project: \`${{ matrix.project }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "Job Status: \`${{ job.status }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "Lint result: \`${LINT_RESULT}\`" >> $GITHUB_STEP_SUMMARY
+          echo "Total Action Duration: ${TOTAL}s" >> $GITHUB_STEP_SUMMARY
+
+          if [ "$LINT_RESULT" = "failure" ]; then
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Lint failed in \`${{ matrix.project }}\`" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Lint passed for \`${{ matrix.project }}\`" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          echo " -------------- -------------- -------------- -------------- " >> $GITHUB_STEP_SUMMARY
