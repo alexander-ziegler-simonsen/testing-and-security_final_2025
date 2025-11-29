@@ -4,16 +4,24 @@ This folder holds the node express api, there are some steps needed to be done, 
 
 
 # init
-I'm using pnpm, so if you use yarn or npm, it will be faced with a lot of package conflicts. 
+I'm using pnpm, so if you use yarn or npm, then you will be faced with a lot of package conflicts. 
 
 In order to get the api up and running, you first need the database to be running, since we need to talk with it before we start the api.
 Remember to fill out the DATABASE_URL inside the .env file.
 
-run "pnpm install".
-this comamnd should auto run "pnpm run postinstall", which generates the prisma files.
-if there is no files inside the path "src/generated/prisma/", then you have to run it yourself.
+you need to run these commands:
 
-in case you are faced with some errors, you could try to run "pnpm run update_schema", but you should not need to do that.
+```shell
+pnpm install
+
+# generated the prisma files, that the api need to run
+pnpm run prisma_build
+# this step was in the 'postinstall' package.json script before, but that gave problems with the github actions pipeline
+```
+
+then you can start it locally with "pnpm run dev".
+
+in case you are faced with some errors, you could try to run "pnpm run prisma_update", but you should really not need to do that.
 
 
 ## why this extra step ?
