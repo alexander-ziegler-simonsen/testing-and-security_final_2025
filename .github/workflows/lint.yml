@@ -1,23 +1,32 @@
 name: Lint client and api
 
+# env:
+#   GLOBAL_START: ${{ github.run_started_at }}
+
 on:
   push:
   pull_request:
 
 jobs:
   lint:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     strategy:
       matrix:
         project: [api, client]
 
     steps:
-      - name: Start full timer
-        id: global_start
-        run: echo "GLOBAL_START=$(date +%s)" >> $GITHUB_ENV
+    #   - name: Start full timer
+    #     id: global_start
+    #     run: echo "GLOBAL_START=$(date +%s)" >> $GITHUB_ENV
 
       - name: Checkout repo
         uses: actions/checkout@v4
+
+        # this makes our CI action go faster - since each project now get cached separately 
+      - name: Create CI-only .npmrc for local pnpm stores 
+        run: |
+          echo "store-dir=.pnpm-store" > api/.npmrc    
+          echo "store-dir=.pnpm-store" > client/.npmrc 
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v3
@@ -30,13 +39,16 @@ jobs:
         with:
           node-version: 24
 
-      - name: Cache pnpm store
+      # --- NEW: Cache project-local pnpm store + node_modules ---
+      - name: Cache node_modules and .pnpm-store
         uses: actions/cache@v4
         with:
-          path: ~/.pnpm-store
-          key: ${{ runner.os }}-pnpm-${{ hashFiles('api/pnpm-lock.yaml', 'client/pnpm-lock.yaml') }}
+          path: |
+            ./${{ matrix.project }}/node_modules
+            ./${{ matrix.project }}/.pnpm-store
+          key: ${{ runner.os }}-${{ matrix.project }}-${{ hashFiles(format('{0}/pnpm-lock.yaml', matrix.project)) }}
           restore-keys: |
-            ${{ runner.os }}-pnpm-
+            ${{ runner.os }}-${{ matrix.project }}-
 
       - name: Start timer
         id: start
@@ -56,25 +68,25 @@ jobs:
             exit 1
           fi
 
-      - name: Write summary
-        if: always()
-        run: |
-          END=$(date +%s)
-          TOTAL=$(( END - GLOBAL_START ))
-          echo " -------------- -------------- -------------- -------------- " >> $GITHUB_STEP_SUMMARY
-          echo " Lint Summary for \`${{ matrix.project }}\`" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "Project: \`${{ matrix.project }}\`" >> $GITHUB_STEP_SUMMARY
-          echo "Job Status: \`${{ job.status }}\`" >> $GITHUB_STEP_SUMMARY
-          echo "Lint result: \`${LINT_RESULT}\`" >> $GITHUB_STEP_SUMMARY
-          echo "Total Action Duration: ${TOTAL}s" >> $GITHUB_STEP_SUMMARY
+      # - name: Write summary
+      #   if: always()
+      #   run: |
+      #     END=$(date +%s)
+      #     TOTAL=$(( END - GLOBAL_START ))
+      #     echo " -------------- -------------- -------------- -------------- " >> $GITHUB_STEP_SUMMARY
+      #     echo " Lint Summary for \`${{ matrix.project }}\`" >> $GITHUB_STEP_SUMMARY
+      #     echo "" >> $GITHUB_STEP_SUMMARY
+      #     echo "Project: \`${{ matrix.project }}\`" >> $GITHUB_STEP_SUMMARY
+      #     echo "Job Status: \`${{ job.status }}\`" >> $GITHUB_STEP_SUMMARY
+      #     echo "Lint result: \`${LINT_RESULT}\`" >> $GITHUB_STEP_SUMMARY
+      #     echo "Total Action Duration: ${TOTAL}s" >> $GITHUB_STEP_SUMMARY
 
-          if [ "$LINT_RESULT" = "failure" ]; then
-            echo "" >> $GITHUB_STEP_SUMMARY
-            echo "Lint failed in \`${{ matrix.project }}\`" >> $GITHUB_STEP_SUMMARY
-          else
-            echo "" >> $GITHUB_STEP_SUMMARY
-            echo "Lint passed for \`${{ matrix.project }}\`" >> $GITHUB_STEP_SUMMARY
-          fi
+      #     if [ "$LINT_RESULT" = "failure" ]; then
+      #       echo "" >> $GITHUB_STEP_SUMMARY
+      #       echo "Lint failed in \`${{ matrix.project }}\`" >> $GITHUB_STEP_SUMMARY
+      #     else
+      #       echo "" >> $GITHUB_STEP_SUMMARY
+      #       echo "Lint passed for \`${{ matrix.project }}\`" >> $GITHUB_STEP_SUMMARY
+      #     fi
 
-          echo " -------------- -------------- -------------- -------------- " >> $GITHUB_STEP_SUMMARY
+      #     echo " -------------- -------------- -------------- -------------- " >> $GITHUB_STEP_SUMMARY
