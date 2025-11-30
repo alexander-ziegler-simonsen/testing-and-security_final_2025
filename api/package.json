@@ -6,8 +6,8 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon --watch src --ext ts --exec tsx src/main.ts",
-    "lint": "eslint . --config ./config/eslint.config.ts",
-    "lint:fix": "eslint . --fix -c ./config/eslint.config.js",
+    "lint": "eslint . --config config/eslint.config.ts",
+    "lint:fix": "eslint . --fix -c config/eslint.config.js",
     "prisma_update": "prisma pull db",
     "prisma_build": "prisma generate",
     "test": "echo \"Error: no test specified\" && exit 1"
