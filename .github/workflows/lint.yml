@@ -1,8 +1,5 @@
 name: Lint client and api
 
-# env:
-#   GLOBAL_START: ${{ github.run_started_at }}
-
 concurrency:
   group: lint
   cancel-in-progress: false
@@ -16,13 +13,11 @@ jobs:
   lint:
     runs-on: ubuntu-22.04
     strategy:
+      fail-fast: false # by default, this is set to true, which kills off parallel jobs
       matrix:
         project: [api, client]
 
     steps:
-    #   - name: Start full timer
-    #     id: global_start
-    #     run: echo "GLOBAL_START=$(date +%s)" >> $GITHUB_ENV
 
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -72,26 +67,3 @@ jobs:
             echo "LINT_RESULT=failure" >> $GITHUB_ENV
             exit 1
           fi
-
-      # - name: Write summary
-      #   if: always()
-      #   run: |
-      #     END=$(date +%s)
-      #     TOTAL=$(( END - GLOBAL_START ))
-      #     echo " -------------- -------------- -------------- -------------- " >> $GITHUB_STEP_SUMMARY
-      #     echo " Lint Summary for \`${{ matrix.project }}\`" >> $GITHUB_STEP_SUMMARY
-      #     echo "" >> $GITHUB_STEP_SUMMARY
-      #     echo "Project: \`${{ matrix.project }}\`" >> $GITHUB_STEP_SUMMARY
-      #     echo "Job Status: \`${{ job.status }}\`" >> $GITHUB_STEP_SUMMARY
-      #     echo "Lint result: \`${LINT_RESULT}\`" >> $GITHUB_STEP_SUMMARY
-      #     echo "Total Action Duration: ${TOTAL}s" >> $GITHUB_STEP_SUMMARY
-
-      #     if [ "$LINT_RESULT" = "failure" ]; then
-      #       echo "" >> $GITHUB_STEP_SUMMARY
-      #       echo "Lint failed in \`${{ matrix.project }}\`" >> $GITHUB_STEP_SUMMARY
-      #     else
-      #       echo "" >> $GITHUB_STEP_SUMMARY
-      #       echo "Lint passed for \`${{ matrix.project }}\`" >> $GITHUB_STEP_SUMMARY
-      #     fi
-
-      #     echo " -------------- -------------- -------------- -------------- " >> $GITHUB_STEP_SUMMARY
