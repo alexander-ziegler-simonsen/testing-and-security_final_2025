@@ -3,6 +3,11 @@ name: Lint client and api
 # env:
 #   GLOBAL_START: ${{ github.run_started_at }}
 
+concurrency:
+  group: lint
+  cancel-in-progress: false
+
+
 on:
   push:
   pull_request:
