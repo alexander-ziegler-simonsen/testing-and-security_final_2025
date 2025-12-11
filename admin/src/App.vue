@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import Counter from './components/Counter.vue'
+import NavBar from './components/NavBar.vue'
 </script>
 
 <template>
-  <div>
+  <NavBar />
+  <RouterView />
+  <!-- <div>
     <p>this is App</p>
   </div>
-  <Counter msg="Vite + Vue" />
+  <Counter msg="Vite + Vue" /> -->
 </template>
