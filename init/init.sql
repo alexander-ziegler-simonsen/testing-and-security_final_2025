@@ -1,17 +1,11 @@
--- Create database tradeIt if it does NOT already exist
-DO
-$$
-BEGIN
-    IF NOT EXISTS (
-        SELECT FROM pg_database WHERE datname = 'tradeIt'
-    ) THEN
-        CREATE DATABASE "tradeIt";
-    END IF;
-END
-$$;
+-- Create database if it does not exist
+SELECT 'CREATE DATABASE "tradeIt"'
+WHERE NOT EXISTS (
+    SELECT FROM pg_database WHERE datname = 'tradeIt'
+)\gexec
 
 -- Switch to that database
-\connect "tradeIt";
+\c "tradeIt";
 
 -- ENUMS
 CREATE TYPE product_state AS ENUM ('Open', 'Sold', 'Deactivated');
