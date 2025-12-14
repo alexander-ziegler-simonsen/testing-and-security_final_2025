@@ -1,15 +1,28 @@
+import { Prisma } from "../generated/prisma/client";
 import { MainPrisma } from "../lib/MainPrisma";
-import { UserCreateSchema, UserResponseSchema, 
-    UserCreateDTO, UserUpdateDTO } from "../schemas/UserSchema";
+import {
+    UserCreateSchema, UserResponseSchema,
+    UserCreateDTO, UserUpdateDTO
+} from "../schemas/UserSchema";
 
 export const createUser = async (input: UserCreateDTO) => {
-    const newUser = await MainPrisma.users.create({data: input});
-    return UserCreateSchema.parse(newUser);
+    try {
+        const newUser = await MainPrisma.users.create({ data: input });
+        return UserResponseSchema.parse(newUser);
+    } catch (err) {
+        if (
+            err instanceof Prisma.PrismaClientKnownRequestError &&
+            err.code === "P2002"
+        ) {
+            return null;
+        }
+        throw err;
+    }
 };
 
 export const getUsers = async () => {
     const users = await MainPrisma.users.findMany();
-    return users.map((u) =>  UserResponseSchema.parse(u));
+    return users.map((u) => UserResponseSchema.parse(u));
 };
 
 export const getUserById = async (id: number) => {

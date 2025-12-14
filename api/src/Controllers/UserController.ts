@@ -1,13 +1,24 @@
 import { Request, Response } from "express";
 import { createUser, getUsers, getUserById, updateUser, deleteUser } from "../Services/UserService";
 import { UserCreateDTO, UserUpdateDTO } from "../schemas/UserSchema";
+import { Prisma } from "../generated/prisma/client";
 
 // create one user
 
 // req                                         {parms}, {resBody}, {reqBody}, ({reqQuery})
-export const createUserHandler = async (req: Request<{}, {}, UserCreateDTO>,res: Response) => {
-    const user = await createUser(req.body);
-    return res.status(201).json(user);
+export const createUserHandler = async (req: Request<{}, {}, UserCreateDTO>, res: Response) => {
+    try {
+        const user = await createUser(req.body);
+        console.log("user in controller", user);
+        if (!user) {
+            return res.status(400).json({message: "problems with user inputs"});
+        } else {
+            return res.status(201).json(user);
+        }
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({message: "internal server error" });
+    }
 };
 
 // read all users
@@ -25,8 +36,8 @@ export const getUserByIdHandler = async (req: Request, res: Response) => {
 };
 
 // update one user
-export const updateUserHandler = async ( 
-//                   {parms}, {resBody}, {reqBody}, ({reqQuery})
+export const updateUserHandler = async (
+    //                   {parms}, {resBody}, {reqBody}, ({reqQuery})
     req: Request<{ id: string }, {}, UserUpdateDTO>,
     res: Response
 ) => {
@@ -39,7 +50,7 @@ export const updateUserHandler = async (
 };
 
 // delete one user
-export const deleteUserHandler = async ( req: Request<{ id: number }>,
+export const deleteUserHandler = async (req: Request<{ id: number }>,
     res: Response
 ) => {
     try {
