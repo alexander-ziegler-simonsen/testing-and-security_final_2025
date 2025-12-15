@@ -18,13 +18,13 @@ export type UserCreateDTO = z.infer<typeof UserCreateSchema>;
 // READ
 export const UserResponseSchema = z.object({
     id: z.number(),
-    username: z.string().min(1),
-    password: z.string(),
+    username: z.string().min(4).max(20),
+    password: z.string().min(4).max(20),
     salt: z.string(),
-    firstname: z.string(),
-    lastname: z.string(),
-    email: z.string(),
-    phone: z.string(),
+    firstname: z.string().min(4).max(35),
+    lastname: z.string().min(4).max(35),
+    email: z.email().min(5).max(35),
+    phone: z.string().min(8).max(8),
     signedup: z.coerce.date()
 });
 

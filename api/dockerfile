@@ -1,0 +1,21 @@
+FROM node:24-bookworm AS dev
+
+# Enable pnpm
+RUN corepack enable
+
+WORKDIR /app
+
+# Install deps
+COPY package.json pnpm-lock.yaml ./
+RUN pnpm install
+
+# Copy source
+COPY . .
+
+# Generate Prisma client (needed even in dev)
+RUN pnpm run prisma_build
+
+
+EXPOSE 3000
+
+CMD ["pnpm", "dev"]
