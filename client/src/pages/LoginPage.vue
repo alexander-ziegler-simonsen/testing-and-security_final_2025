@@ -63,29 +63,29 @@ function handleSubmit() {
             <form @submit.prevent="handleSubmit" class="space-y-4">
                 <div>
                     <label>Email</label>
-                    <input type="email" v-model="form.email" />
-                    <p v-if="errors.email">
+                    <input id="LoginInputEmail" type="email" v-model="form.email" />
+                    <p id="LoginEmailFeedback" v-if="errors.email">
                         {{ errors.email }}
                     </p>
                 </div>
 
                 <div>
                     <label>Password</label>
-                    <input type="password" v-model="form.password" />
-                    <p v-if="errors.password">
+                    <input id="LoginInputPassword" type="password" v-model="form.password" />
+                    <p id="LoginPasswordFeedback" v-if="errors.password">
                         {{ errors.password }}
                     </p>
                 </div>
 
-                <button :disabled="loading">
+                <button  id="LoginBtnSubmit" :disabled="loading">
                     {{ loading ? "Logging in..." : "Login" }}
                 </button>
             </form>
         </div>
         <div>
-            <h1>Don't have a account, click the link below to create one</h1>
+            <p>Don't have a account, click the link below to create one</p>
             <nav>
-                <RouterLink to="/create_user">create new account</RouterLink>
+                <RouterLink id="btnCreateUser" to="/create_user">create new account</RouterLink>
             </nav>
         </div>
     </div>
