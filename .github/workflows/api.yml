@@ -1,0 +1,74 @@
+name: API Tests
+on:
+    push:
+        branches: [main, master]
+    pull_request:
+        branches: [main, master]
+jobs:
+    apiTests:
+        timeout-minutes: 60
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: lts/*
+
+            # inject env values from github secrets
+            - name: create env file for
+              working-directory: .
+              run: |
+                  cat <<EOF > .env
+                  POSTGRES_DB=${{ secrets.POSTGRES_DB }}
+                  POSTGRES_USER=${{ secrets.POSTGRES_USER }}
+                  POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
+                  POSTGRES_PORT=${{ secrets.POSTGRES_PORT }}
+                  EOF
+
+            # start the docker compose file
+            - name: start docker
+              working-directory: . # root folder
+              run: docker compose up -d --build
+
+            - name: wait for backend
+              run: npx wait-on ${{ secrets.API_HOST }}
+
+            # create the postman env values, so that newman works
+            - name: Create Postman environment from secrets
+              run: |
+                cat <<EOF > testing/api/postman_environment.json
+                {
+                "id": "ci-env",
+                "name": "CI Environment",
+                "values": [
+                    {
+                    "key": "host",
+                    "value": "${{ secrets.API_HOST }}",
+                    "enabled": true
+                    },
+                    {
+                    "key": "user_id",
+                    "value": 404,
+                    "enabled": true
+                    },
+                    {
+                    "key": "product_id",
+                    "value": 404,
+                    "enabled": true
+                    },
+                    {
+                    "key": "comment_id",
+                    "value": 404,
+                    "enabled": true
+                    }
+                ]
+                }
+                EOF
+
+            - name: Run Newman tests
+              run: newman run testing/api/postman_collection.json -e testing/api/postman_environment.json
+            
+            # cleanup
+            - name: Stop docker
+              if: always()
+              run: docker compose down -v
