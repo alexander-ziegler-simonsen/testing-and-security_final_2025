@@ -6,6 +6,7 @@ on:
         branches: [main, master]
 jobs:
     apiTests:
+        environment: monoEnv # the name of the environment
         timeout-minutes: 60
         runs-on: ubuntu-latest
         steps:
