@@ -32,7 +32,9 @@ jobs:
               run: docker compose up -d --build
 
             - name: wait for backend
-              run: npx wait-on ${{ secrets.API_HOST }}
+              run: npx wait-on ${{ secrets.API_HOST }} --timeout 300000 # stops after 5 mins
+
+            
 
             # create the postman env values, so that newman works
             - name: Create Postman environment from secrets
