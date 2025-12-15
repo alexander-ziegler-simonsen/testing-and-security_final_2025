@@ -3,7 +3,7 @@ import { createComment, getCommentById, deleteComment, updateComment, getComment
 import { CommentCreateDTO, CommentUpdateDTO } from "../schemas/CommentSchema";
 
 // create one Comment
-export const createCommentHandler = async (req: Request<{}, {}, CommentCreateDTO>,res: Response) => {
+export const createCommentHandler = async (req: Request<{}, {}, CommentCreateDTO>, res: Response) => {
     const Comment = await createComment(req.body);
     return res.status(201).json(Comment);
 };
@@ -23,8 +23,8 @@ export const getCommentByIdHandler = async (req: Request, res: Response) => {
 };
 
 // update one Comment
-export const updateCommentHandler = async ( 
-//                   {parms}, {resBody}, {reqBody}, ({reqQuery})
+export const updateCommentHandler = async (
+    //            {parms}, {resBody}, {reqBody}, ({reqQuery})
     req: Request<{ id: string }, {}, CommentUpdateDTO>,
     res: Response
 ) => {
@@ -32,18 +32,20 @@ export const updateCommentHandler = async (
         const updated = await updateComment(Number(req.params.id), req.body);
         return res.json(updated);
     } catch (err) {
+        console.error(err);
         return res.status(404).json({ message: "Comment not found" });
     }
 };
 
 // delete one Comment
-export const deleteCommentHandler = async ( req: Request<{ id: number }>,
+export const deleteCommentHandler = async (req: Request<{ id: number }>,
     res: Response
 ) => {
     try {
         const deleted = await deleteComment(Number(req.params.id));
         return res.json(deleted);
     } catch (err) {
+        console.error(err);
         return res.status(404).json({ message: "Comment not found" });
     }
 };

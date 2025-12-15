@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import { createUser, getUsers, getUserById, updateUser, deleteUser } from "../Services/UserService";
 import { UserCreateDTO, UserUpdateDTO } from "../schemas/UserSchema";
-import { Prisma } from "../generated/prisma/client";
 
 // create one user
 
@@ -45,6 +44,7 @@ export const updateUserHandler = async (
         const updated = await updateUser(Number(req.params.id), req.body);
         return res.json(updated);
     } catch (err) {
+        console.error(err);
         return res.status(404).json({ message: "User not found" });
     }
 };
@@ -57,6 +57,7 @@ export const deleteUserHandler = async (req: Request<{ id: number }>,
         const deleted = await deleteUser(Number(req.params.id));
         return res.json(deleted);
     } catch (err) {
+        console.error(err);
         return res.status(404).json({ message: "User not found" });
     }
 };

@@ -1,7 +1,7 @@
 import { Prisma } from "../generated/prisma/client";
 import { MainPrisma } from "../lib/MainPrisma";
 import {
-    UserCreateSchema, UserResponseSchema,
+    UserResponseSchema,
     UserCreateDTO, UserUpdateDTO
 } from "../schemas/UserSchema";
 

@@ -1,5 +1,5 @@
 import express from 'express';
-import { UserCreateSchema, UserResponseSchema, UserUpdateSchema } from '../schemas/UserSchema';
+import { UserCreateSchema, UserUpdateSchema } from '../schemas/UserSchema';
 
 import { createUserHandler, updateUserHandler, getUserByIdHandler, getUsersHandler, deleteUserHandler } from '../Controllers/UserController';
 import { validate } from '../middleware/validate';
