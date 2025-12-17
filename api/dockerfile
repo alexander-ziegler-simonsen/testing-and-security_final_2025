@@ -1,5 +1,6 @@
 FROM node:24-bookworm AS dev
 
+
 # Enable pnpm
 RUN corepack enable
 
