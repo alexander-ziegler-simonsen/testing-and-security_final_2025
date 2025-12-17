@@ -1,18 +1,18 @@
 services:
-  api:
-    build:
-      context: ./api/
-      dockerfile: Dockerfile
-      # args:
-      #   DATABASE_URL: ${DATABASE_URL}
-    env_file:
-      - .env
-    ports:
-      - "${API_PORT}:3000"
-    depends_on:
-      - db
-    networks:
-      - app_net
+  # # api:
+  # #   build:
+  # #     context: ./api/
+  # #     dockerfile: Dockerfile
+  # #     # args:
+  # #     #   DATABASE_URL: ${DATABASE_URL}
+  # #   env_file:
+  # #     - .env
+  # #   ports:
+  # #     - "${API_PORT}:3000"
+  # #   depends_on:
+  # #     - db
+  # #   networks:
+  # #     - app_net
 
   db:
     image: postgres:18.0
