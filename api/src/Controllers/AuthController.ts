@@ -27,6 +27,8 @@ export const login = async (req: Request, res: Response) => {
 
 export const me = async (req: AuthRequest, res: Response) => {
     res.json({
-        userId: req.userId,
-    });
+        user: {
+            userId: req.user?.userId,
+            role: req.user?.role
+        }});
 }

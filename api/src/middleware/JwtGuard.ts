@@ -2,7 +2,10 @@ import { Request, Response, NextFunction } from "express";
 import { verifyToken } from "../utils/jwt";
 
 export interface AuthRequest extends Request {
-    userId?: number;
+    user?: {
+        userId: number;
+        role: "user" | "admin";
+    };
 }
 
 export const authMiddleware = (
@@ -20,7 +23,10 @@ export const authMiddleware = (
 
     try {
         const payload = verifyToken(token);
-        req.userId = payload.userId;
+        req.user = {
+            userId: payload.userId,
+            role: payload.role
+        }
         next();
     } catch {
         res.status(401).json({ message: "Invalid token" });
