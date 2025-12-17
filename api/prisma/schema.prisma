@@ -46,6 +46,7 @@ model ProductImages {
 model Products {
   id                      Int                @id @default(autoincrement())
   fk_user_id              Int?
+  title                   String             @db.VarChar(255)
   price                   Decimal            @db.Decimal(10, 2)
   description             String?
   state                   product_state      @default(Open)
