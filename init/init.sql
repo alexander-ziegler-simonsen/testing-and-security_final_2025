@@ -9,6 +9,7 @@ WHERE NOT EXISTS (
 
 -- ENUMS
 CREATE TYPE product_state AS ENUM ('Open', 'Sold', 'Deactivated');
+CREATE TYPE user_type as ENUM ('user', 'admin');
 
 -- USERS
 CREATE TABLE "Users" (
@@ -20,7 +21,8 @@ CREATE TABLE "Users" (
     lastname VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
     phone VARCHAR(8) NOT NULL,
-    signedUp TIMESTAMP NOT NULL DEFAULT NOW()
+    signedUp TIMESTAMP NOT NULL DEFAULT NOW(),
+    user_role user_type NOT NULL DEFAULT 'user'
 );
 
 -- PRODUCT CATEGORIES

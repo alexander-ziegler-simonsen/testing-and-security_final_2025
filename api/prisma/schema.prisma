@@ -67,6 +67,7 @@ model Users {
   email           String            @unique @db.VarChar(255)
   phone           String            @db.VarChar(8)
   signedup        DateTime          @default(now()) @db.Timestamp(6)
+  user_role       user_type         @default(user)
   Comments        Comments[]
   ProductFavorite ProductFavorite[]
   Products        Products[]
@@ -76,4 +77,9 @@ enum product_state {
   Open
   Sold
   Deactivated
+}
+
+enum user_type {
+  user
+  admin
 }
