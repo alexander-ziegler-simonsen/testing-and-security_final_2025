@@ -60,12 +60,12 @@ model Products {
 model Users {
   id              Int               @id @default(autoincrement())
   username        String            @unique @db.VarChar(255)
-  password        String            @db.VarChar(255)
-  salt            String            @db.VarChar(255)
+  hashedpassword  String            @db.VarChar(64)
+  salt            String            @db.VarChar(36)
   firstname       String            @db.VarChar(255)
   lastname        String            @db.VarChar(255)
   email           String            @unique @db.VarChar(255)
-  phone           String            @db.VarChar(50)
+  phone           String            @db.VarChar(8)
   signedup        DateTime          @default(now()) @db.Timestamp(6)
   Comments        Comments[]
   ProductFavorite ProductFavorite[]
