@@ -74,11 +74,11 @@ CREATE TABLE "ProductFavorite" (
 -- ================================
 
 -- USERS
-INSERT INTO "Users" (username, hashedPassword, salt, firstname, lastname, email, phone)
+INSERT INTO "Users" (username, hashedPassword, salt, firstname, lastname, email, phone, user_role)
 VALUES
-('johnny123', 'fe871c39f90c87ddb13b9a1dfe247cfdfae24e926dabf3c3f4a4a32323c8926f', '85b8fca5-3f27-4d02-b631-dad5bd7ce5c8', 'John', 'Andersen', 'john@example.com', '12345678'),
-('sarah91', '7d9f3598f0aea01e42513f316d94aa316ff1d3697d602f0e6db1c297c3a17123', '1826f888-bddd-4388-9490-b743b43fee5a', 'Sarah', 'Nielsen', 'sarah@example.com', '87654321'),
-('mike88', 'a3f1c44d89c94c9072e7a203092bc59e6bdc36739f5ecc6f1508793300ff4fdf', '99c81109-132a-48d1-865e-1b3d879b1ac6', 'Michael', 'Poulsen', 'mike@example.com', '99887766');
+('johnny123', 'fe871c39f90c87ddb13b9a1dfe247cfdfae24e926dabf3c3f4a4a32323c8926f', '85b8fca5-3f27-4d02-b631-dad5bd7ce5c8', 'John', 'Andersen', 'john@example.com', '12345678', 'admin'),
+('sarah91', '7d9f3598f0aea01e42513f316d94aa316ff1d3697d602f0e6db1c297c3a17123', '1826f888-bddd-4388-9490-b743b43fee5a', 'Sarah', 'Nielsen', 'sarah@example.com', '87654321', 'user'),
+('mike88', 'a3f1c44d89c94c9072e7a203092bc59e6bdc36739f5ecc6f1508793300ff4fdf', '99c81109-132a-48d1-865e-1b3d879b1ac6', 'Michael', 'Poulsen', 'mike@example.com', '99887766', 'user');
 
 
 -- PRODUCT CATEGORIES
