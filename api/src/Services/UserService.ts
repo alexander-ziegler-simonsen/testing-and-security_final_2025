@@ -10,13 +10,12 @@ import { hashPassword } from "../utils/auth";
 
 export const createUser = async (input: UserRegisterRequestPublicDTO) => {
     try {
-        // the input are not yet the same as the prisma schema.
-
+        // handling of the password
         const tempSalt = crypto.randomUUID();
         const tempHashedPass = hashPassword(input.password, tempSalt);
         const tempDateNow = new Date();
 
-        const tempUser: UserRegisterInternalDTO = {
+        const tempUser = {
             username: input.username,
             hashedpassword: tempHashedPass,
             salt: tempSalt,
@@ -27,7 +26,7 @@ export const createUser = async (input: UserRegisterRequestPublicDTO) => {
             signedup: tempDateNow
         }
 
-        const newUser = await MainPrisma.users.create({ data: tempUser });
+        const newUser = await MainPrisma.users.create({ data: UserRegisterInternalSchema.parse(tempUser) });
         return newUser.id;
     } catch (err) {
         if (
