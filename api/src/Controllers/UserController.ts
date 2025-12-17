@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
 import { createUser, getUsers, getUserById, updateUser, deleteUser } from "../Services/UserService";
-import { UserCreateDTO, UserUpdateDTO } from "../schemas/UserSchema";
+import { UserRegisterRequestPublicDTO, UserUpdatePublicDTO } from "../schemas/UserSchema";
 
 // create one user
 
 // req                                         {parms}, {resBody}, {reqBody}, ({reqQuery})
-export const createUserHandler = async (req: Request<{}, {}, UserCreateDTO>, res: Response) => {
+export const createUserHandler = async (req: Request<{}, {}, UserRegisterRequestPublicDTO>, res: Response) => {
     try {
         const user = await createUser(req.body);
         console.log("user in controller", user);
@@ -37,7 +37,7 @@ export const getUserByIdHandler = async (req: Request, res: Response) => {
 // update one user
 export const updateUserHandler = async (
     //                   {parms}, {resBody}, {reqBody}, ({reqQuery})
-    req: Request<{ id: string }, {}, UserUpdateDTO>,
+    req: Request<{ id: string }, {}, UserUpdatePublicDTO>,
     res: Response
 ) => {
     try {
