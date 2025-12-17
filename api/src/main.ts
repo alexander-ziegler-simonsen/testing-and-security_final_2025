@@ -1,9 +1,10 @@
-import dotenv from 'dotenv'
+// import dotenv from 'dotenv' // problems with linter
+import "dotenv/config"; // works fine with linters
 
 import { productRouter } from "./modules/product/product.routes.js";
 
 import express from 'express';
-dotenv.config({ path: '.env' });
+//dotenv.config({ path: '.env' });
 
 const app = express();
 const port = process.env.PORT ?? 3000;
