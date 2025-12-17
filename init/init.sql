@@ -14,12 +14,12 @@ CREATE TYPE product_state AS ENUM ('Open', 'Sold', 'Deactivated');
 CREATE TABLE "Users" (
     id SERIAL PRIMARY KEY,
     username VARCHAR(255) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL,
-    salt VARCHAR(255) NOT NULL,
+    hashedPassword VARCHAR(64) NOT NULL,
+    salt VARCHAR(36) NOT NULL,
     firstname VARCHAR(255) NOT NULL,
     lastname VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
-    phone VARCHAR(50) NOT NULL,
+    phone VARCHAR(8) NOT NULL,
     signedUp TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
@@ -72,11 +72,11 @@ CREATE TABLE "ProductFavorite" (
 -- ================================
 
 -- USERS
-INSERT INTO "Users" (username, password, salt, firstname, lastname, email, phone)
+INSERT INTO "Users" (username, hashedPassword, salt, firstname, lastname, email, phone)
 VALUES
-('johnny123', 'hashed_pw_1', 'salt1', 'John', 'Andersen', 'john@example.com', '12345678'),
-('sarah91', 'hashed_pw_2', 'salt2', 'Sarah', 'Nielsen', 'sarah@example.com', '87654321'),
-('mike88', 'hashed_pw_3', 'salt3', 'Michael', 'Poulsen', 'mike@example.com', '99887766');
+('johnny123', 'fe871c39f90c87ddb13b9a1dfe247cfdfae24e926dabf3c3f4a4a32323c8926f', '85b8fca5-3f27-4d02-b631-dad5bd7ce5c8', 'John', 'Andersen', 'john@example.com', '12345678'),
+('sarah91', '7d9f3598f0aea01e42513f316d94aa316ff1d3697d602f0e6db1c297c3a17123', '1826f888-bddd-4388-9490-b743b43fee5a', 'Sarah', 'Nielsen', 'sarah@example.com', '87654321'),
+('mike88', 'a3f1c44d89c94c9072e7a203092bc59e6bdc36739f5ecc6f1508793300ff4fdf', '99c81109-132a-48d1-865e-1b3d879b1ac6', 'Michael', 'Poulsen', 'mike@example.com', '99887766');
 
 
 -- PRODUCT CATEGORIES
