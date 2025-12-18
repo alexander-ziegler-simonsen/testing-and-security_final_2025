@@ -1,58 +1,87 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import ItemCard from '../components/ItemCard.vue';
-import ProductPage from './ProductPage.vue';
-const testImage = new URL( '../assets/images/testImage.jpg', import.meta.url).href;
+import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
+import ItemCard from "../components/ItemCard.vue";
+import { ProductSchema, ProductDTO } from "../schemas/ProductSchema";
+import { z } from "zod";
 
-import { ProductDTO } from '../schemas/ProductSchema';
+const products = ref<ProductDTO[]>([]);
+const loading = ref(true);
+const error = ref<string | null>(null);
 
-const oneNewProduct: ProductDTO = {
-  title: "test",
-  price: 200,
-  description: "test",
-  images: [testImage, testImage, testImage]
-}
-const count = ref(0);
-const increment = () => (count.value++);
+const router = useRouter();
+const ProductListSchema = z.array(ProductSchema);
+
+const pickRandom = (items: ProductDTO[], count: number) => {
+    return [...items]
+        .sort(() => 0.5 - Math.random())
+        .slice(0, count);
+};
+
+const fetchRandomProducts = async () => {
+    try {
+        loading.value = true;
+        error.value = null;
+
+        const res = await fetch(
+            "http://localhost:3000/api/search/v2?sortBy=date&sortOrder=desc"
+        );
+
+        if (!res.ok) {
+            throw new Error("Failed to load products");
+        }
+
+        const json = await res.json();
+        const allProducts = ProductListSchema.parse(json);
+
+        products.value = pickRandom(allProducts, 3);
+    } catch (err) {
+        console.error(err);
+        error.value = "Could not load products";
+    } finally {
+        loading.value = false;
+    }
+};
+
+const goToProduct = (id: number) => {
+    router.push(`/product/${id}`);
+};
+
+onMounted(fetchRandomProducts);
 </script>
 
 <template>
-  <div class="p-6">
-    <h1 class="text-3xl font-bold mb-4">
-      Welcome to the Vue Home Page
-    </h1>
-    <button class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700" @click="increment">
-      Counter: {{ count }}
-    </button>
-  </div>
+  <div class="p-6 space-y-4">
+    <h2 class="text-xl font-semibold">
+      Featured items
+    </h2>
 
-  <div class="items-grid">
-    <h1>product cards</h1>
-    <ItemCard title="iphone" price="2000"
-      :image-url="testImage" />
-    <ItemCard title="car" price="20000"
-      :image-url="testImage" />
-    <ItemCard title="xbox one" price="2000"
-      :image-url="testImage" />
-    <ItemCard title="stol" price="100"
-      :image-url="testImage" />
-    <ItemCard title="bærbar" price="200"
-      :image-url="testImage" />
-    <ItemCard title="hus" price="100000"
-      :image-url="testImage" />
-    <ItemCard title="taske" price="20"
-      :image-url="testImage" />
+    <p v-if="loading">Loading…</p>
+    <p v-if="error" class="text-red-600">{{ error }}</p>
 
-  </div>
-  <div>
-    <ProductPage :product="oneNewProduct" />
+    <div v-if="products.length" class="items-grid">
+      <ItemCard
+        v-for="product in products"
+        :key="product.id"
+        :title="product.title"
+        :price="product.price"
+        :image-url="product.images[0]"
+        @click="goToProduct(product.id)"
+      />
+    </div>
+
+    <p v-else-if="!loading">
+      No products available right now.
+    </p>
   </div>
 </template>
+
 
 <style scoped>
 .items-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(3, 1fr); /* exactly 3 columns */
+  gap: 24px;
+  width: 100%;
 }
 </style>
