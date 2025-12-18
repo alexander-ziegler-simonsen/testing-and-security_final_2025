@@ -3,18 +3,35 @@ import { MainPrisma } from "../lib/MainPrisma";
 import { ProductCreateSchema, ProductResponseSchema, ProductCreateDTO, ProductUpdateDTO } from "../schemas/ProductSchema";
 
 export const createProduct = async (input: ProductCreateDTO) => {
-    const newProduct = await MainPrisma.products.create({data: input});
+    const newProduct = await MainPrisma.products.create({ data: input });
     return ProductCreateSchema.parse(newProduct);
 };
 
 export const getProducts = async () => {
     const Products = await MainPrisma.products.findMany();
-    return Products.map((pro) =>  ProductResponseSchema.parse(pro));
+    return Products.map((pro) => ProductResponseSchema.parse(pro));
 };
 
 export const getProductById = async (id: number) => {
-    const Product = await MainPrisma.products.findUnique({ where: { id } });
-    return Product ? ProductResponseSchema.parse(Product) : null;
+    const product = await MainPrisma.products.findUnique({
+        where: {
+            id: id,
+        },
+        include: {
+            ProductImages: {
+                select: {
+                    imagepath: true,
+                },
+            },
+        },
+    });
+
+    if (!product) return null;
+
+    return ProductResponseSchema.parse({
+        ...product,
+        images: product.ProductImages.map((img) => img.imagepath),
+    });
 };
 
 export const updateProduct = async (id: number, data: ProductUpdateDTO) => {
@@ -28,13 +45,13 @@ export const deleteProduct = async (id: number) => {
 
     try {
         MainPrisma.$transaction(async (tx) => {
-        // delete everything that is connected to this post
-        await tx.comments.deleteMany({where: {fk_product_id: id} });
-        await tx.productImages.deleteMany({where: {fk_product_id: id} });
-        await tx.productFavorite.deleteMany({where: {fk_product_id: id} });
+            // delete everything that is connected to this post
+            await tx.comments.deleteMany({ where: { fk_product_id: id } });
+            await tx.productImages.deleteMany({ where: { fk_product_id: id } });
+            await tx.productFavorite.deleteMany({ where: { fk_product_id: id } });
 
-        // then delete the post
-        await tx.products.delete({where: {id} });
+            // then delete the post
+            await tx.products.delete({ where: { id } });
         });
 
         return true;

@@ -8,7 +8,7 @@ import { UserRegisterRequestPublicDTO, UserUpdatePublicDTO } from "../schemas/Us
 export const createUserHandler = async (req: Request<{}, {}, UserRegisterRequestPublicDTO>, res: Response) => {
     try {
         const user = await createUser(req.body);
-        console.log("user in controller", user);
+        //console.log("user in controller", user);
         if (!user) {
             return res.status(400).json({message: "problems with user inputs"});
         } else {
