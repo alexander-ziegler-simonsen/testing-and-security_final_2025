@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
-import { createProduct, getProductById, deleteProduct, updateProduct, getProducts } from "../Services/ProductService";
+import { createProduct, getProductById, deleteProduct, updateProduct } from "../Services/ProductService";
 import { ProductCreateDTO, ProductUpdateDTO, ProductDeleteParamsSchema } from "../schemas/ProductSchema";
+import { getMyProducts } from "../Services/ProductService";
+import { AuthRequest } from "../middleware/JwtGuard";
 
 // create one product
 export const createProductHandler = async (req: Request<{}, {}, ProductCreateDTO>,res: Response) => {
@@ -9,8 +11,15 @@ export const createProductHandler = async (req: Request<{}, {}, ProductCreateDTO
 };
 
 // read all products
-export const getProductsHandler = async (req: Request, res: Response) => {
-    return res.json(await getProducts());
+
+
+export const getMyProductsHandler = async (req: AuthRequest, res: Response) => {
+    if (!req.user) {
+        return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    const products = await getMyProducts(req.user.userId);
+    return res.json(products);
 };
 
 // read one product

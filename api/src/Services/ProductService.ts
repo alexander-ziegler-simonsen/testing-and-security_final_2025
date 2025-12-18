@@ -7,9 +7,26 @@ export const createProduct = async (input: ProductCreateDTO) => {
     return ProductCreateSchema.parse(newProduct);
 };
 
-export const getProducts = async () => {
-    const Products = await MainPrisma.products.findMany();
-    return Products.map((pro) => ProductResponseSchema.parse(pro));
+export const getMyProducts = async (userId: number) => {
+    const products = await MainPrisma.products.findMany({
+        where: {
+            fk_user_id: userId,
+        },
+        include: {
+            ProductImages: {
+                select: {
+                    imagepath: true,
+                },
+            },
+        },
+    });
+
+    return products.map((pro) =>
+        ProductResponseSchema.parse({
+            ...pro,
+            images: pro.ProductImages.map((img) => img.imagepath),
+        })
+    );
 };
 
 export const getProductById = async (id: number) => {
