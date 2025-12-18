@@ -17,6 +17,7 @@ export const PriceSchema = z
 export const ProductCreateSchema = z.object({
     fk_user_id: z.number(),
     price: PriceSchema,
+    title: z.string(),
     description: z.string(),
     state: z.enum(["Open", "Sold", "Deactivated"]),
     fk_productcategories_id: z.int(),
@@ -30,12 +31,14 @@ export const ProductResponseSchema = z.object({
     id: z.number(),
     fk_user_id: z.number(),
     price: PriceSchema,
+    title: z.string(),
     description: z.string(),
     state: z.enum(["Open", "Sold", "Deactivated"]),
     fk_productcategories_id: z.int(),
+    images: z.array(z.string()),
 });
 
-export type ProductResponse = z.infer<typeof ProductResponseSchema>;
+export type ProductResponseDTO = z.infer<typeof ProductResponseSchema>;
 
 
 // UPDATE
@@ -43,6 +46,7 @@ export const ProductUpdateSchema = z.object({
     id: z.number().optional(),
     fk_user_id: z.number().min(1).optional(),
     price: PriceSchema.optional(),
+    title: z.string(),
     description: z.string().optional(),
     state: z.enum(["Open", "Sold", "Deactivated"]),
     fk_productcategories_id: z.string().optional(),
