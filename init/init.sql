@@ -129,7 +129,7 @@ VALUES
 -- PRODUCT IMAGES
 INSERT INTO "ProductImages" (fk_product_id, imagePath)
 VALUES
-(1, '/uploads/products/table1.jpg'),
+(1, '/uploads/imgs/table1.jpg'),
 (2, '/uploads/imgs/iphone.jpg'),
 (2, '/uploads/imgs/iphone2.jpg'),
 
