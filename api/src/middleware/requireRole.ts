@@ -1,6 +1,7 @@
 import { Response, NextFunction } from "express";
 import { AuthRequest } from "./JwtGuard";
 
+// check if the roles is right
 export const requireRole = (role: "user" | "admin") => {
     return (req: AuthRequest, res: Response, next: NextFunction) => {
         if (!req.user) {

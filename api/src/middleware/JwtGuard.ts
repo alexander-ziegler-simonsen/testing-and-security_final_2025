@@ -8,6 +8,7 @@ export interface AuthRequest extends Request {
     };
 }
 
+// check if it exist or wrong
 export const authMiddleware = (
     req: AuthRequest,
     res: Response,
