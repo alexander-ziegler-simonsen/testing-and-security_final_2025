@@ -1,11 +1,29 @@
 <script setup lang="ts">
-import { RouterLink } from "vue-router";
+import { RouterLink, useRouter } from "vue-router";
+import { ref } from "vue";
+
+const search = ref('');
+const router = useRouter();
+
+function onSearch() {
+    if (!search.value.trim()) return;
+    router.push({
+        path: '/search',
+        query: { q: search.value }
+    })
+}
 </script>
 
 <template>
     <header class="navbar">
         <h1 class="logo">Trade-IT</h1>
 
+        <form @submit.prevent="onSearch">
+            <input v-model="search" type="text" placeholder="Search..." />
+            <button type="submit">
+                Search
+            </button>
+        </form>
         <nav class="nav-links">
             <RouterLink to="/">Dashboard</RouterLink>
             <RouterLink to="/about">About</RouterLink>
@@ -22,8 +40,8 @@ import { RouterLink } from "vue-router";
 
     padding: 1rem 1.5rem;
     background: #f5f5f5;
-    box-shadow:  0 2px 1px #949494;
-    
+    box-shadow: 0 2px 1px #949494;
+
     border-radius: 3px;
 }
 

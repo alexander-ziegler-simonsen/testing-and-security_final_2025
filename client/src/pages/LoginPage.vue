@@ -3,9 +3,12 @@ import { ref } from "vue";
 import { z } from "zod";
 import { loginSchema, type LoginInput } from "../validation/loginSchema";
 
+import { isPasswordPwned } from "../utils/hibp";
 
 type Issue = z.ZodError["issues"][number];
 type FieldErrors = Partial<Record<keyof LoginInput, string>>;
+
+let wasItPawned = false;
 
 const form = ref<LoginInput>({
     email: "",
@@ -34,7 +37,7 @@ function mapZodErrorsToStrings(issues: Issue[] | undefined) {
     return out;
 }
 
-function handleSubmit() {
+async function handleSubmit() {
     const parsed = loginSchema.safeParse(form.value);
 
     if (!parsed.success) {
@@ -52,6 +55,11 @@ function handleSubmit() {
         emit("login", parsed.data);
         loading.value = false;
     }, 600);
+
+
+    const wasIt = await isPasswordPwned(form.value.password);
+    wasItPawned = wasIt;
+    console.log("was it pawned?:", wasIt);
 }
 </script>
 
@@ -81,6 +89,10 @@ function handleSubmit() {
                     {{ loading ? "Logging in..." : "Login" }}
                 </button>
             </form>
+        </div>
+        <div>
+            <h1>temp setup</h1>
+            <p>was password pawned: {{ wasItPawned }}</p>
         </div>
         <div>
             <p>Don't have a account, click the link below to create one</p>
