@@ -8,6 +8,7 @@
     "dev": "nodemon --watch src --ext ts --exec tsx src/main.ts",
     "lint": "eslint . --config config/eslint.config.ts",
     "lint:fix": "eslint . --fix -c config/eslint.config.js",
+    "drizzle-gen": "drizzle-kit pull --config=src/drizzle.config.ts",
     "prisma_update": "prisma db pull",
     "prisma_build": "prisma generate",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -19,6 +20,7 @@
   "dependencies": {
     "bcrypt": "^6.0.0",
     "drizzle-orm": "^0.45.1",
+    "drizzle-zod": "^0.8.3",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.3",
     "prisma": "^7.0.1",
