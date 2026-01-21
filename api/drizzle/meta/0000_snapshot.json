@@ -1,0 +1,451 @@
+{
+  "id": "00000000-0000-0000-0000-000000000000",
+  "prevId": "",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.ProductCategories": {
+      "name": "ProductCategories",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "fk_pc_parant_id": {
+          "name": "fk_pc_parant_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "ProductCategories_fk_pc_parant_id_fkey": {
+          "name": "ProductCategories_fk_pc_parant_id_fkey",
+          "tableFrom": "ProductCategories",
+          "tableTo": "ProductCategories",
+          "schemaTo": "public",
+          "columnsFrom": [
+            "fk_pc_parant_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {},
+      "policies": {},
+      "isRLSEnabled": false
+    },
+    "public.Users": {
+      "name": "Users",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "username": {
+          "name": "username",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "hashedpassword": {
+          "name": "hashedpassword",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "salt": {
+          "name": "salt",
+          "type": "varchar(36)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "firstname": {
+          "name": "firstname",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "lastname": {
+          "name": "lastname",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "email": {
+          "name": "email",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "phone": {
+          "name": "phone",
+          "type": "varchar(8)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "signedup": {
+          "name": "signedup",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "user_role": {
+          "name": "user_role",
+          "type": "user_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'user'"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "Users_username_key": {
+          "columns": [
+            "username"
+          ],
+          "nullsNotDistinct": false,
+          "name": "Users_username_key"
+        },
+        "Users_email_key": {
+          "columns": [
+            "email"
+          ],
+          "nullsNotDistinct": false,
+          "name": "Users_email_key"
+        }
+      },
+      "checkConstraints": {},
+      "policies": {},
+      "isRLSEnabled": false
+    },
+    "public.Products": {
+      "name": "Products",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "fk_user_id": {
+          "name": "fk_user_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "title": {
+          "name": "title",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "price": {
+          "name": "price",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "state": {
+          "name": "state",
+          "type": "product_state",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'Open'"
+        },
+        "fk_productcategories_id": {
+          "name": "fk_productcategories_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "Products_fk_user_id_fkey": {
+          "name": "Products_fk_user_id_fkey",
+          "tableFrom": "Products",
+          "tableTo": "Users",
+          "schemaTo": "public",
+          "columnsFrom": [
+            "fk_user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "Products_fk_productcategories_id_fkey": {
+          "name": "Products_fk_productcategories_id_fkey",
+          "tableFrom": "Products",
+          "tableTo": "ProductCategories",
+          "schemaTo": "public",
+          "columnsFrom": [
+            "fk_productcategories_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {},
+      "policies": {},
+      "isRLSEnabled": false
+    },
+    "public.ProductImages": {
+      "name": "ProductImages",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "fk_product_id": {
+          "name": "fk_product_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "imagepath": {
+          "name": "imagepath",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "ProductImages_fk_product_id_fkey": {
+          "name": "ProductImages_fk_product_id_fkey",
+          "tableFrom": "ProductImages",
+          "tableTo": "Products",
+          "schemaTo": "public",
+          "columnsFrom": [
+            "fk_product_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {},
+      "policies": {},
+      "isRLSEnabled": false
+    },
+    "public.Comments": {
+      "name": "Comments",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "content": {
+          "name": "content",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "fk_user_id": {
+          "name": "fk_user_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "public": {
+          "name": "public",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "fk_product_id": {
+          "name": "fk_product_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "Comments_fk_user_id_fkey": {
+          "name": "Comments_fk_user_id_fkey",
+          "tableFrom": "Comments",
+          "tableTo": "Users",
+          "schemaTo": "public",
+          "columnsFrom": [
+            "fk_user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "Comments_fk_product_id_fkey": {
+          "name": "Comments_fk_product_id_fkey",
+          "tableFrom": "Comments",
+          "tableTo": "Products",
+          "schemaTo": "public",
+          "columnsFrom": [
+            "fk_product_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {},
+      "policies": {},
+      "isRLSEnabled": false
+    },
+    "public.ProductFavorite": {
+      "name": "ProductFavorite",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "fk_user_id": {
+          "name": "fk_user_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "fk_product_id": {
+          "name": "fk_product_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "ProductFavorite_fk_user_id_fkey": {
+          "name": "ProductFavorite_fk_user_id_fkey",
+          "tableFrom": "ProductFavorite",
+          "tableTo": "Users",
+          "schemaTo": "public",
+          "columnsFrom": [
+            "fk_user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "ProductFavorite_fk_product_id_fkey": {
+          "name": "ProductFavorite_fk_product_id_fkey",
+          "tableFrom": "ProductFavorite",
+          "tableTo": "Products",
+          "schemaTo": "public",
+          "columnsFrom": [
+            "fk_product_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "ProductFavorite_fk_user_id_fk_product_id_key": {
+          "columns": [
+            "fk_user_id",
+            "fk_product_id"
+          ],
+          "nullsNotDistinct": false,
+          "name": "ProductFavorite_fk_user_id_fk_product_id_key"
+        }
+      },
+      "checkConstraints": {},
+      "policies": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {
+    "public.product_state": {
+      "name": "product_state",
+      "values": [
+        "Open",
+        "Sold",
+        "Deactivated"
+      ],
+      "schema": "public"
+    },
+    "public.user_type": {
+      "name": "user_type",
+      "values": [
+        "user",
+        "admin"
+      ],
+      "schema": "public"
+    }
+  },
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "schemas": {},
+    "tables": {},
+    "columns": {}
+  },
+  "internal": {
+    "tables": {}
+  }
+}
