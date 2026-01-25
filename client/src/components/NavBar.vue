@@ -1,9 +1,13 @@
 <script setup lang="ts">
 import { RouterLink, useRouter } from "vue-router";
 import { ref } from "vue";
+import LogoutButton from "./LogoutButton.vue";
+import { useAuthStore } from "../store/auth";
 
 const search = ref('');
 const router = useRouter();
+const auth = useAuthStore();
+
 
 function onSearch() {
     if (!search.value.trim()) return;
@@ -30,6 +34,9 @@ function onSearch() {
             <RouterLink to="/login">Login</RouterLink>
         </nav>
     </header>
+    <div>
+        <LogoutButton v-if="auth.isAuthenticated" />
+    </div>
 </template>
 
 <style scoped>

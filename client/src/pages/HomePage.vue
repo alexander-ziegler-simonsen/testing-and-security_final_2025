@@ -1,8 +1,17 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import ItemCard from '../components/ItemCard.vue';
+import ProductPage from './ProductPage.vue';
 const testImage = new URL( '../assets/images/testImage.jpg', import.meta.url).href;
 
+import { ProductDTO } from '../schemas/ProductSchema';
+
+const oneNewProduct: ProductDTO = {
+  title: "test",
+  price: 200,
+  description: "test",
+  images: [testImage, testImage, testImage]
+}
 const count = ref(0);
 const increment = () => (count.value++);
 </script>
@@ -34,6 +43,9 @@ const increment = () => (count.value++);
     <ItemCard title="taske" price="20"
       :image-url="testImage" />
 
+  </div>
+  <div>
+    <ProductPage :product="oneNewProduct" />
   </div>
 </template>
 
