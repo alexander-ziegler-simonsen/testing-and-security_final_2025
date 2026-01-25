@@ -19,7 +19,8 @@ export const loginService = async (email: string, password: string) => {
         throw new Error("INVALID_CREDENTIALS");
     }
 
-    const token = signToken({ userId: user.id });
+    // TODO - fix this . roles should be read from the database
+    const token = signToken({ userId: user.id, role: user.user_role });
 
     return {
         token,

@@ -1,9 +1,26 @@
 <script setup lang="ts">
-defineProps<{
+import { computed } from "vue";
+
+const props = defineProps<{
     title: string;
     price: number | string;
     imageUrl: string;
 }>();
+
+const API_BASE_URL = "http://localhost:3000";
+
+const resolvedImageUrl = computed(() => {
+    if (!props.imageUrl) 
+    {
+        return "/placeholder.png";
+    }
+    if (props.imageUrl.startsWith("http")) 
+    {
+        return props.imageUrl;
+    }
+    
+    return `${API_BASE_URL}${props.imageUrl}`;
+});
 </script>
 
 <template>
@@ -11,7 +28,7 @@ defineProps<{
         <h3 class="title">{{ title }}</h3>
 
         <div class="image-wrapper">
-            <img :src="imageUrl" :alt="title" />
+            <img :src="resolvedImageUrl" :alt="title" />
         </div>
 
         <div class="price">{{ price }} kr</div>

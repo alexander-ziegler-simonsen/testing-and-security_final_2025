@@ -5,8 +5,11 @@ import {
     type CreateUserInput,
     type Issue,
 } from "../validation/createUserSchema";
+import { isPasswordPwned } from "../utils/hibp";
 
 type FieldErrors = Partial<Record<keyof CreateUserInput, string>>;
+
+let wasItPawned = false;
 
 const form = ref<CreateUserInput>({
     firstname: "",
@@ -40,7 +43,7 @@ const emit = defineEmits<{
     (e: "create", payload: CreateUserInput): void;
 }>();
 
-function handleSubmit() {
+async function handleSubmit() {
     const result = createUserSchema.safeParse(form.value);
 
     if (!result.success) {
@@ -56,6 +59,10 @@ function handleSubmit() {
         emit("create", result.data);
         loading.value = false;
     }, 600);
+
+    const wasIt = await isPasswordPwned(form.value.password);
+    wasItPawned = wasIt;
+    console.log("was it pawned?:", wasIt);
 }
 </script>
 
@@ -118,6 +125,17 @@ function handleSubmit() {
             {{ loading ? "Creating..." : "Create User" }}
         </button>
     </form>
+
+            <div>
+            <h1>temp setup</h1>
+            <p>was password pawned: {{ wasItPawned }}</p>
+        </div>
+        <div>
+            <p>Don't have a account, click the link below to create one</p>
+            <nav>
+                <RouterLink id="btnCreateUser" to="/create_user">create new account</RouterLink>
+            </nav>
+        </div>
 </template>
 
 <style scoped>

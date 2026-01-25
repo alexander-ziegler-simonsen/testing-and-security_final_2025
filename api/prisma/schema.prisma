@@ -46,6 +46,7 @@ model ProductImages {
 model Products {
   id                      Int                @id @default(autoincrement())
   fk_user_id              Int?
+  title                   String             @db.VarChar(255)
   price                   Decimal            @db.Decimal(10, 2)
   description             String?
   state                   product_state      @default(Open)
@@ -60,13 +61,14 @@ model Products {
 model Users {
   id              Int               @id @default(autoincrement())
   username        String            @unique @db.VarChar(255)
-  password        String            @db.VarChar(255)
-  salt            String            @db.VarChar(255)
+  hashedpassword  String            @db.VarChar(64)
+  salt            String            @db.VarChar(36)
   firstname       String            @db.VarChar(255)
   lastname        String            @db.VarChar(255)
   email           String            @unique @db.VarChar(255)
-  phone           String            @db.VarChar(50)
+  phone           String            @db.VarChar(8)
   signedup        DateTime          @default(now()) @db.Timestamp(6)
+  user_role       user_type         @default(user)
   Comments        Comments[]
   ProductFavorite ProductFavorite[]
   Products        Products[]
@@ -76,4 +78,9 @@ enum product_state {
   Open
   Sold
   Deactivated
+}
+
+enum user_type {
+  user
+  admin
 }

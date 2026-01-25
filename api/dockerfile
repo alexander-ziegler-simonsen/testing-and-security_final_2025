@@ -1,5 +1,6 @@
 FROM node:24-bookworm AS dev
 
+
 # Enable pnpm
 RUN corepack enable
 
@@ -13,9 +14,9 @@ RUN pnpm install
 COPY . .
 
 # Generate Prisma client (needed even in dev)
-RUN pnpm run prisma_build
+#RUN pnpm run prisma_build
 
 
 EXPOSE 3000
 
-CMD ["pnpm", "dev"]
+CMD ["pnpm", "devDocker"]

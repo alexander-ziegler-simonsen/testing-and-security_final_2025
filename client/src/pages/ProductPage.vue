@@ -1,32 +1,74 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { ref, computed, onMounted } from "vue";
+import { useRoute } from "vue-router";
 import { ProductSchema, ProductDTO } from "../schemas/ProductSchema";
 import ImageSlider from "../components/ImageSlider.vue";
 
-// props
-const props = defineProps<{
-    product: ProductDTO;
-}>();
+const route = useRoute();
+const product = ref<ProductDTO | null>(null);
+const loading = ref(true);
+const error = ref<string | null>(null);
 
-// runtime validation 
-ProductSchema.parse(props.product);
+const API_BASE_URL = "http://localhost:3000";
 
-// computed helpers
-const formattedPrice = computed(() =>
-    new Intl.NumberFormat("da-DK", {
+const resolvedImages = computed(() => {
+    if (!product.value) return [];
+    return product.value.images.map((img) =>
+        img.startsWith("http") ? img : `${API_BASE_URL}${img}`
+    );
+});
+
+const productId = computed(() => Number(route.params.id));
+
+const formattedPrice = computed(() => {
+    if (!product.value) return "";
+    return new Intl.NumberFormat("da-DK", {
         style: "currency",
         currency: "DKK",
-    }).format(props.product.price)
-);
+    }).format(product.value.price);
+});
 
+const fetchProduct = async () => {
+    try {
+        loading.value = true;
+        error.value = null;
+
+        const res = await fetch(
+            `http://localhost:3000/api/products/${productId.value}`
+        );
+
+        console.log("product", productId);
+
+        if (!res.ok) {
+            throw new Error("Product not found");
+        }
+
+        const json = await res.json();
+
+        // runtime validation
+        product.value = ProductSchema.parse(json);
+    } catch (err) {
+        console.error(err);
+        error.value = "Could not load product";
+    } finally {
+        loading.value = false;
+    }
+};
+
+onMounted(fetchProduct);
 </script>
 
 <template>
     <div class="product-page">
-        <h1 class="title">{{ product.title }}</h1>
-        <ImageSlider :images="product.images" />
-        <p class="description">{{ product.description }}</p>
-        <div class="price">{{ formattedPrice }}</div>
+        <p v-if="loading">Loading…</p>
+        <p v-if="error" class="error">{{ error }}</p>
+
+        <template v-if="product">
+            <h1 class="title">{{ product.title }}</h1>
+            <ImageSlider :images="resolvedImages" />
+            <p class="description">{{ product.description }}</p>
+            <div class="price">{{ formattedPrice }}</div>
+        </template>
     </div>
 </template>
 

@@ -9,26 +9,27 @@ const router = useRouter();
 const auth = useAuthStore();
 
 
-function onSearch() {
-    if (!search.value.trim()) return;
-    router.push({
-        path: '/search',
-        query: { q: search.value }
-    })
-}
+// function onSearch() {
+//     if (!search.value.trim()) return;
+//     router.push({
+//         path: '/search',
+//         query: { q: search.value }
+//     })
+// }
 </script>
 
 <template>
     <header class="navbar">
         <h1 class="logo">Trade-IT</h1>
 
-        <form @submit.prevent="onSearch">
+        <!-- <form @submit.prevent="onSearch">
             <input v-model="search" type="text" placeholder="Search..." />
             <button type="submit">
                 Search
             </button>
-        </form>
+        </form> -->
         <nav class="nav-links">
+            <RouterLink to="/search">search</RouterLink>
             <RouterLink to="/">Dashboard</RouterLink>
             <RouterLink to="/about">About</RouterLink>
             <RouterLink to="/login">Login</RouterLink>

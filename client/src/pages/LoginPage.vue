@@ -1,14 +1,12 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { z } from "zod";
+import { useRouter } from "vue-router";
 import { loginSchema, type LoginInput } from "../validation/loginSchema";
-
-import { isPasswordPwned } from "../utils/hibp";
+import { useAuthStore } from "../store/auth";
 
 type Issue = z.ZodError["issues"][number];
 type FieldErrors = Partial<Record<keyof LoginInput, string>>;
-
-let wasItPawned = false;
 
 const form = ref<LoginInput>({
     email: "",
@@ -18,13 +16,11 @@ const form = ref<LoginInput>({
 const errors = ref<FieldErrors>({});
 const loading = ref(false);
 
-const emit = defineEmits<{
-    (e: "login", payload: LoginInput): void;
-}>();
+const router = useRouter();
+const auth = useAuthStore();
 
 function mapZodErrorsToStrings(issues: Issue[] | undefined) {
     const out: Record<string, string> = {};
-
     if (!issues) return out;
 
     for (const issue of issues) {
@@ -33,7 +29,6 @@ function mapZodErrorsToStrings(issues: Issue[] | undefined) {
             out[key] = issue.message;
         }
     }
-
     return out;
 }
 
@@ -41,27 +36,52 @@ async function handleSubmit() {
     const parsed = loginSchema.safeParse(form.value);
 
     if (!parsed.success) {
-        // Option A: use parsed.error.issues and map them to strings
         errors.value = mapZodErrorsToStrings(parsed.error.issues);
         return;
     }
 
-    // success
     errors.value = {};
     loading.value = true;
 
-    // Simulate API call
-    setTimeout(() => {
-        emit("login", parsed.data);
+    try {
+        const res = await fetch("http://localhost:3000/auth/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(parsed.data),
+        });
+
+        if (!res.ok) {
+            throw new Error("Invalid credentials");
+        }
+
+        const json = await res.json();
+
+        // store tokens
+        auth.setTokens({
+            accessToken: json.accessToken,
+            refreshToken: json.refreshToken,
+        });
+
+        // store user if provided
+        if (json.user) {
+            auth.setUser(json.user);
+        }
+
+        router.push("/account");
+    } catch (err) {
+        console.error(err);
+        errors.value = {
+            password: "Invalid email or password",
+        };
+    } finally {
         loading.value = false;
-    }, 600);
-
-
-    const wasIt = await isPasswordPwned(form.value.password);
-    wasItPawned = wasIt;
-    console.log("was it pawned?:", wasIt);
+    }
 }
 </script>
+
+
 
 <template>
     <div>
@@ -85,20 +105,10 @@ async function handleSubmit() {
                     </p>
                 </div>
 
-                <button  id="LoginBtnSubmit" :disabled="loading">
+                <button id="LoginBtnSubmit" :disabled="loading">
                     {{ loading ? "Logging in..." : "Login" }}
                 </button>
             </form>
-        </div>
-        <div>
-            <h1>temp setup</h1>
-            <p>was password pawned: {{ wasItPawned }}</p>
-        </div>
-        <div>
-            <p>Don't have a account, click the link below to create one</p>
-            <nav>
-                <RouterLink id="btnCreateUser" to="/create_user">create new account</RouterLink>
-            </nav>
         </div>
     </div>
 </template>

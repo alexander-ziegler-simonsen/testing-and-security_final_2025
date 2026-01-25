@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon --watch src --ext ts --exec tsx src/main.ts",
+    "devDocker": "dotenv -e .env -- prisma generate && nodemon --watch src --ext ts --exec tsx src/main.ts",
     "lint": "eslint . --config config/eslint.config.ts",
     "lint:fix": "eslint . --fix -c config/eslint.config.js",
     "drizzle-gen": "drizzle-kit pull --config=src/drizzle.config.ts",
@@ -22,8 +23,12 @@
     "drizzle-orm": "^0.45.1",
     "drizzle-zod": "^0.8.3",
     "express": "^5.1.0",
+    "express-rate-limit": "^8.2.1",
+    "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.3",
+    "multer": "^2.0.2",
     "prisma": "^7.0.1",
+    "sharp": "^0.34.5",
     "zod": "^4.1.13"
   },
   "devDependencies": {
@@ -35,8 +40,10 @@
     "@prisma/adapter-pg": "^7.1.0",
     "@prisma/client": "^7.0.1",
     "@types/bcrypt": "^6.0.0",
+    "@types/cors": "^2.8.19",
     "@types/express": "^5.0.5",
     "@types/jsonwebtoken": "^9.0.10",
+    "@types/multer": "^2.0.0",
     "@types/node": "^24.10.1",
     "@types/pg": "^8.16.0",
     "dotenv": "^17.2.3",
