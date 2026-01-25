@@ -1,10 +1,12 @@
-import { MainPrisma } from "../lib/MainPrisma";
+//import { MainPrisma } from "../lib/MainPrisma";
+import { db } from "../lib/MainDrizzle";
+//import { users } from "../db/schema";
 import { verifyPassword } from "../utils/auth";
 import { signToken } from "../utils/jwt";
 
 export const loginService = async (email: string, password: string) => {
-    const user = await MainPrisma.users.findUnique({
-        where: { email },
+    const user = await db.query.users.findFirst({
+        where: (users, {eq}) => eq(users.email, email)
     });
 
     if (!user) {
@@ -12,7 +14,7 @@ export const loginService = async (email: string, password: string) => {
     }
 
     const isValid = await verifyPassword(
-        password, user.salt, user.password);
+        password, user.salt, user.hashedpassword);
     if (!isValid) {
         throw new Error("INVALID_CREDENTIALS");
     }
