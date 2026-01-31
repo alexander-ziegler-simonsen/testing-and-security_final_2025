@@ -20,7 +20,7 @@ export const loginService = async (email: string, password: string) => {
     }
 
     // TODO - fix this . roles should be read from the database
-    const token = signToken({ userId: user.id, role: user.user_role });
+    const token = signToken({ userId: user.id, role: user.userRole });
 
     return {
         token,

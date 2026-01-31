@@ -1,4 +1,7 @@
+import { numeric } from "drizzle-orm/pg-core";
 import { z } from "zod";
+
+export const PriceSchema = numeric("price", { precision: 10, scale: 2 });
 
 export const SearchBasicSchema = z.object({
     search: z.string()

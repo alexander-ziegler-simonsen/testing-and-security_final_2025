@@ -35,7 +35,7 @@ export const users = pgTable("Users", {
 
 export const products = pgTable("Products", {
 	id: serial().primaryKey().notNull(),
-	fkUserId: integer("fk_user_id"),
+	fkUserId: integer("fk_user_id").notNull(),
 	title: varchar({ length: 255 }).notNull(),
 	price: numeric({ precision: 10, scale:  2 }).notNull(),
 	description: text(),

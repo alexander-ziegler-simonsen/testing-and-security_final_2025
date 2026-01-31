@@ -1,22 +1,18 @@
 import { z } from "zod";
-import { Decimal } from "@prisma/client/runtime/client";
+import { numeric } from "drizzle-orm/pg-core";
 
 // prisma uses decimal numbers get returned as a 'Decimal2' object, which zod does not support
 // price convert
-export const PriceSchema = z
-    .custom<Decimal>((val) => val instanceof Decimal, {
-        message: "Expected Prisma Decimal",
-    })
-    .transform((val) => {
-        const num = val.toNumber();
-        return Math.floor(num * 100) / 100;
-    });
-
+//export const PriceSchema = numeric("price", { precision: 10, scale: 2 });
+export const PriceInputSchema = z.union([z.string(), z.number()])
+    .transform(val => Number(val))
+    .nonoptional()
+    .refine(val => !Number.isNaN(val), { message: "Invalid price", });
 
 // POST
 export const ProductCreateSchema = z.object({
     fk_user_id: z.number(),
-    price: PriceSchema,
+    price: PriceInputSchema,
     title: z.string(),
     description: z.string(),
     state: z.enum(["Open", "Sold", "Deactivated"]),
@@ -30,7 +26,7 @@ export type ProductCreateDTO = z.infer<typeof ProductCreateSchema>;
 export const ProductResponseSchema = z.object({
     id: z.number(),
     fk_user_id: z.number(),
-    price: PriceSchema,
+    price: z.number(),
     title: z.string(),
     description: z.string(),
     state: z.enum(["Open", "Sold", "Deactivated"]),
@@ -45,7 +41,7 @@ export type ProductResponseDTO = z.infer<typeof ProductResponseSchema>;
 export const ProductUpdateSchema = z.object({
     id: z.number().optional(),
     fk_user_id: z.number().min(1).optional(),
-    price: PriceSchema.optional(),
+    price: z.number(),
     title: z.string(),
     description: z.string().optional(),
     state: z.enum(["Open", "Sold", "Deactivated"]),
