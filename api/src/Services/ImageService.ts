@@ -1,9 +1,16 @@
-import { MainPrisma } from "../lib/MainPrisma";
+//import { MainPrisma } from "../lib/MainPrisma";
 import { ImageCreateDTO, ImageCreateSchema } from "../schemas/ImageSchema";
+import { db } from "../lib/MainDrizzle";
+import { productImages } from "../db/schema";
 import sharp from "sharp";
 import crypto from "crypto";
 import path from "path";
 import fs from "fs/promises";
+import { createSelectSchema } from "drizzle-zod";
+
+const selectSchema = createSelectSchema(productImages);
+// const selectIdSchema = createSelectSchema(productImages).pick({id: true});
+// const selectUserIdSchema = createSelectSchema(productImages).pick({fkProductId: true});
 
 // TODO - replace this with an online image storage
 // the local place where we store files
@@ -27,14 +34,22 @@ export const createImage = async (
     const imagePath = `/uploads/imgs/${filename}`;
 
     // DB write
-    const tempImage: ImageCreateDTO = { 
-        fk_product_id: input.fk_product_id, 
+    const newProductImage = selectSchema.parse({
+        fk_product_id: input.fk_product_id,
         imagepath: imagePath
-    };
-
-    const newImage = await MainPrisma.productImages.create({
-        data: tempImage
     });
 
+    const newImage = await db.insert(productImages).values(newProductImage);
+
     return ImageCreateSchema.parse(newImage);
+};
+
+export const getImage = async (input: { relativePath: string; }) => {
+    const fullPath = path.resolve("/uploads/imgs/", input.relativePath);
+
+    if (!fs.realpath(fullPath)) {
+        return null;
+    }
+
+    //return fs.
 };

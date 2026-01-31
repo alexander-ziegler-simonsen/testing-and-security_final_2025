@@ -3,6 +3,7 @@
         "module": "ESNext",
         "outDir": "dist",
         "moduleResolution": "node",
+        "resolveJsonModule": true,
         "target": "ES2023",
         "strict": true,
         "esModuleInterop": true,
