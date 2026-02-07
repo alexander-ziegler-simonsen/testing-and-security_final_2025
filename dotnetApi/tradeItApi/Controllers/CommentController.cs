@@ -1,4 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
+using tradeItApi.Models.InputDto;
+using tradeItApi.Models.OutputDto;
+using tradeItApi.Services;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -8,36 +12,56 @@ namespace tradeItApi.Controllers
     [ApiController]
     public class CommentController : ControllerBase
     {
+        private readonly CommentService _commentService;
+
+        public CommentController(CommentService commentService)
+        {
+            _commentService = commentService;
+        }
+
         // GET: api/<CommentController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<IEnumerable<CommentOutput>> Get()
         {
-            return new string[] { "value1", "value2" };
+            List<CommentOutput> outputs = await _commentService.GetAllAsync();
+
+            return outputs;
         }
 
         // GET api/<CommentController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<CommentOutput> Get(int id)
         {
-            return "value";
+            CommentOutput output = await _commentService.GetByIdAsync(id);
+
+            return output;
         }
 
         // POST api/<CommentController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<bool> Post([FromBody] CommentInput newComment)
         {
+            bool didItWork = await _commentService.CreateAsync(newComment);
+
+            return didItWork; 
         }
 
         // PUT api/<CommentController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<bool> Put(int id, [FromBody] CommentInput value)
         {
+            bool didItWork = await _commentService.UpdateAsync(id, value);
+
+            return didItWork;
         }
 
         // DELETE api/<CommentController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<bool> Delete(int id)
         {
+            bool didItWork = await _commentService.DeleteAsync(id);
+
+            return didItWork;
         }
     }
 }

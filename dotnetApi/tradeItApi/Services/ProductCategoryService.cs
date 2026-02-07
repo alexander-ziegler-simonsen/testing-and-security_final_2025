@@ -1,4 +1,7 @@
-﻿using tradeItApi.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using tradeItApi.Data;
+using tradeItApi.Mapper;
+using tradeItApi.Models.Data;
 using tradeItApi.Models.InputDto;
 using tradeItApi.Models.OutputDto;
 using tradeItApi.Services.Interfaces;
@@ -8,30 +11,79 @@ namespace tradeItApi.Services
     public class ProductCategoryService : IProductCategoryService
     {
         private readonly AppDbContext _context;
+        private ProductCategoryMapper _mapper;
 
         public ProductCategoryService(AppDbContext context)
         {
             _context = context;
+            _mapper = new ProductCategoryMapper();
         }
-        public Task<List<ProductCategoryOutput>> GetAllAsync()
+        public async Task<List<ProductCategoryOutput>> GetAllAsync()
         {
-            return null;
+            List<ProductCategory> output = await _context.ProductCategories.AsNoTracking().ToListAsync();
+
+            return _mapper.ProductCategoryListToProductCategoryOutputList(output);
         }
-        public Task<ProductCategoryOutput?> GetByIdAsync(int id)
+        public async Task<ProductCategoryOutput?> GetByIdAsync(int id)
         {
-            return null;
+            ProductCategory output = await _context.ProductCategories.FindAsync(id);
+
+            if(output == null)
+                return null;
+            else
+                return _mapper.ProductCategoryToProductCategoryOutput(output);
         }
-        public Task<ProductCategoryOutput?> CreateAsync(ProductCategoryInput productCategory)
+        public async Task<ProductCategoryOutput?> CreateAsync(ProductCategoryInput productCategory)
         {
-            return null;
+            ProductCategory newProductCategory = _mapper.ProductCategoryInputToProductCategory(productCategory);
+
+            Console.WriteLine("output id", newProductCategory.id);
+
+            await _context.ProductCategories.AddAsync(newProductCategory);
+            bool didItWork = _context.SaveChangesAsync().IsCompletedSuccessfully;
+
+            Console.WriteLine("output id - after", newProductCategory.id);
+
+            return _mapper.ProductCategoryToProductCategoryOutput(newProductCategory);
         }
-        public Task<bool> UpdateAsync(int id, ProductCategoryInput productCategory)
+        public async Task<bool> UpdateAsync(int id, ProductCategoryInput productCategory)
         {
-            return null;
+            ProductCategory dbProductCategory = await _context.ProductCategories.SingleAsync(c => c.id == id);
+
+            // can't find anything on that id
+            if (dbProductCategory == null)
+                return false;
+
+            // same value as it is in the database
+            if(dbProductCategory.name == productCategory.name)
+                return false;
+
+            // set values
+            dbProductCategory.name = productCategory.name;
+
+            int didItWork = await _context.SaveChangesAsync();
+
+            if (didItWork >= 1)
+                return true;
+            else
+                return false;
         }
-        public Task<bool> DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
-            return null;
+            ProductCategory dbProductCategory = await _context.ProductCategories.SingleAsync(c => c.id == id);
+
+            // can't find anything on that id
+            if (dbProductCategory == null)
+                return false;
+
+            _context.Remove(dbProductCategory);
+
+            int didItWork = await _context.SaveChangesAsync();
+
+            if (didItWork >= 1)
+                return true;
+            else
+                return false;
         }
     }
 }

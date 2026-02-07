@@ -8,5 +8,8 @@ namespace tradeItApi.Mapper;
 [Mapper]
 public partial class ProductMapper
 {
-    public partial ProductOutput ProductToProductOutput(Product Product);
+    public partial ProductOutput ProductToProductOutput(Product product);
+    public partial Product ProductInputToProduct(ProductInput product);
+    public partial List<ProductOutput> ProductListToProductOutputList(List<Product> products);
+
 }

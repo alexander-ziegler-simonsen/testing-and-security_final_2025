@@ -10,4 +10,6 @@ namespace tradeItApi.Mapper;
 public partial class ProductCategoryMapper
 {
     public partial ProductCategoryOutput ProductCategoryToProductCategoryOutput(ProductCategory productCategory);
+    public partial ProductCategory ProductCategoryInputToProductCategory(ProductCategoryInput productCategory);
+    public partial List<ProductCategoryOutput> ProductCategoryListToProductCategoryOutputList(List<ProductCategory> productCategory);
 }

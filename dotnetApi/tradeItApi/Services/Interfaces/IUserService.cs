@@ -8,7 +8,7 @@ namespace tradeItApi.Services.Interfaces
         Task<List<UserOutput>> GetAllAsync();
         Task<UserOutput?> GetByIdAsync(int id);
         Task<UserOutput?> CreateAsync(UserInput user);
-        Task<bool> UpdateAsync(int id, UserInput user);
+        Task<bool> UpdateInfoAsync(int id, UserInput user);
         Task<bool> DeleteAsync(int id);
     }
 }

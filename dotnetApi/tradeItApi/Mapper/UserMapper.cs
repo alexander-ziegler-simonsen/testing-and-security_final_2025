@@ -9,7 +9,6 @@ namespace tradeItApi.Mapper;
 public partial class UserMapper
 {
     public partial UserOutput UserToUserOutput(User user);
-
-    //public partial User UserInputToUser(UserInput user);
-
+    public partial User UserInputToUser(UserInput user);
+    public partial List<UserOutput> UserListToUserOutputList(List<User> user);
 }
