@@ -8,12 +8,10 @@ import {
 } from "../schemas/UserSchema";
 import { hashPassword } from "../utils/auth";
 
-export const createUser = async (input: UserRegisterRequestPublicDTO) => {
-    try {
-        // handling of the password
-        const tempSalt = crypto.randomUUID();
-        const tempHashedPass = hashPassword(input.password, tempSalt);
-        const tempDateNow = new Date();
+import { db } from "../lib/MainDrizzle";
+import { users } from "../db/schema";
+import { eq } from "drizzle-orm";
+import { createInsertSchema, createSelectSchema, createUpdateSchema } from 'drizzle-zod';
 
         const tempUser = {
             username: input.username,
@@ -26,17 +24,22 @@ export const createUser = async (input: UserRegisterRequestPublicDTO) => {
             signedup: tempDateNow
         }
 
-        const newUser = await MainPrisma.users.create({ data: UserRegisterInternalSchema.parse(tempUser) });
-        return newUser.id;
-    } catch (err) {
-        if (
-            err instanceof Prisma.PrismaClientKnownRequestError &&
-            err.code === "P2002"
-        ) {
-            return null;
-        }
-        throw err;
-    }
+export const createUser = async (input: any) => {
+    const newUser = selectSchema.parse(input);
+    return await db.insert(users).values(newUser);
+    
+    // try {
+    //     const newUser = await MainPrisma.users.create({ data: input });
+    //     return UserResponseSchema.parse(newUser);
+    // } catch (err) {
+    //     if (
+    //         err instanceof Prisma.PrismaClientKnownRequestError &&
+    //         err.code === "P2002"
+    //     ) {
+    //         return null;
+    //     }
+    //     throw err;
+    // }
 };
 
 export const getUsers = async () => {
@@ -49,9 +52,10 @@ export const getUserById = async (id: number) => {
     return user ? UserResponsePublicSchema.parse(user) : null;
 };
 
-export const updateUser = async (id: number, data: UserUpdatePublicDTO) => {
-    const updatedUser = await MainPrisma.users.update({ where: { id }, data });
-    return UserResponsePublicSchema.parse(updatedUser)
+export const updateUser = async (id: number, data: any) => {
+    const updatedUser = updateSchema.parse(data);
+    const newUser = await db.update(users).set(updatedUser).where(eq(users.id, id));
+    return selectSchema.parse(newUser);
 };
 
 export const deleteUser = async (id: number) => {
