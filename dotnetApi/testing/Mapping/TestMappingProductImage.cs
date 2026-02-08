@@ -2,7 +2,7 @@
 using tradeItApi.Models.Data;
 using tradeItApi.Models.OutputDto;
 
-namespace testing.Services
+namespace testing.Mapping
 {
     public class TestMappingProductImage
     {
