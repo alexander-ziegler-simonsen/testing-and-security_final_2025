@@ -13,8 +13,41 @@ import imageRoutes from "./routes/ImageRoutes";
 import helmet from "helmet";
 import path from "path";
 import cors from "cors";
+
+import swaggerUi from "swagger-ui-express";
+import { swaggerSpec } from "./swagger/swagger";
+
+//import swaggerUiDist from "swagger-ui-dist";
+//import { fileURLToPath } from "url";
+
+//import swaggerSpec from "./swagger/swagger.json" assert { type: "json" };
+
 const app = express();
 const port = process.env.PORT ?? 3000;
+
+// // swagger setup
+// const __filename = fileURLToPath(import.meta.url);
+// const __dirname = path.dirname(__filename);
+
+// // Serve swagger-ui assets
+// app.use("/swagger-ui", express.static(swaggerUiDist.getAbsoluteFSPath()));
+
+// // Serve OpenAPI spec
+// app.get("/swagger.json", (req, res) => {
+//     res.json(swaggerSpec);
+// });
+
+// // Swagger UI HTML
+// app.use("/docs", express.static(path.join(__dirname, "public/docs")));
+
+// app.get("/health", (req, res) => {
+//     res.json({ ok: true });
+// });
+
+
+
+app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 
 // header setting - by defualt
 // Cross-Origin-Opener-Policy: same-origin

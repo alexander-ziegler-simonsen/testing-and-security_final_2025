@@ -1,6 +1,17 @@
 import { Prisma } from "../generated/prisma/client";
 import { MainPrisma } from "../lib/MainPrisma";
 import { ProductCreateSchema, ProductResponseSchema, ProductCreateDTO, ProductUpdateDTO } from "../schemas/ProductSchema";
+import { db } from "../lib/MainDrizzle";
+import { products} from "../db/schema";
+import { eq } from "drizzle-orm";
+import { createInsertSchema, createSelectSchema, createUpdateSchema } from 'drizzle-zod';
+
+const selectSchema = createSelectSchema(products);
+const selectIdSchema = createSelectSchema(products).pick({id: true});
+const selectUserIdSchema = createSelectSchema(products).pick({fkUserId: true});
+
+const addSchema = createInsertSchema(products);
+const updateSchema = createUpdateSchema(products);
 
 export const createProduct = async (input: ProductCreateDTO) => {
     const newProduct = await MainPrisma.products.create({ data: input });
@@ -30,25 +41,17 @@ export const getMyProducts = async (userId: number) => {
 };
 
 export const getProductById = async (id: number) => {
-    const product = await MainPrisma.products.findUnique({
-        where: {
-            id: id,
-        },
-        include: {
-            ProductImages: {
-                select: {
-                    imagepath: true,
-                },
-            },
-        },
-    });
+    //const Product = selectIdSchema.parse(id);
+    const oneProduct = await db.select().from(products).where(eq(products.id, id)).limit(1);
+    const output = selectSchema.parse(oneProduct[0]);
+    console.log("output",output);
+    return output;
+};
 
-    if (!product) return null;
-
-    return ProductResponseSchema.parse({
-        ...product,
-        images: product.ProductImages.map((img) => img.imagepath),
-    });
+export const getMyProducts = async (user_id: number) => {
+    const Products = selectUserIdSchema.parse(user_id);
+    const myProducts = await db.select().from(products).where(eq(products.fkUserId, Products.fkUserId));
+    return selectSchema.array().parse(myProducts);
 };
 
 export const updateProduct = async (id: number, data: ProductUpdateDTO) => {
