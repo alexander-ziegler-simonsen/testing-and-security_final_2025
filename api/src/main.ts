@@ -66,9 +66,11 @@ app.use(cors({
 
 
 // image requests
-app.use("/uploads", 
-    express.static(path.join(process.cwd(), 
-    "src/uploads"), {
+app.use("/imgs/", express.static(path.resolve("uploads")));
+
+app.use("/uploads",
+    express.static(path.join(process.cwd(),
+        "src/uploads"), {
         immutable: true,
         maxAge: "30d"
     })

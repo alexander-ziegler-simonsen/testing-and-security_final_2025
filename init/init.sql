@@ -129,28 +129,28 @@ VALUES
 -- PRODUCT IMAGES
 INSERT INTO "ProductImages" (fk_product_id, imagePath)
 VALUES
-(1, '/uploads/imgs/table1.jpg'),
-(2, '/uploads/imgs/iphone.jpg'),
-(2, '/uploads/imgs/iphone2.jpg'),
+(1, 'table1.jpg'),
+(2, 'iphone.jpg'),
+(2, 'iphone2.jpg'),
 
-(3, '/uploads/imgs/dell.jpg'),
-(3, '/uploads/imgs/dell2.jpg'),
+(3, 'dell.jpg'),
+(3, 'dell2.jpg'),
 
-(4, '/uploads/imgs/tv2.jpg'),
+(4, 'tv2.jpg'),
 
-(5, '/uploads/imgs/bil.jpg'),
+(5, 'bil.jpg'),
 
-(6, '/uploads/imgs/traktor.jpg'),
+(6, 'traktor.jpg'),
 
-(7, '/uploads/imgs/ps5.jpg'),
+(7, 'ps5.jpg'),
 
-(8, '/uploads/imgs/xbox.jpg'),
+(8, 'xbox.jpg'),
 
-(9, '/uploads/imgs/stol2.jpg'),
+(9, 'stol2.jpg'),
 
-(10, '/uploads/imgs/pc.jpg'),
+(10, 'pc.jpg'),
 
-(11, '/uploads/imgs/jakke.jpg');
+(11, 'jakke.jpg');
 
 
 -- COMMENTS

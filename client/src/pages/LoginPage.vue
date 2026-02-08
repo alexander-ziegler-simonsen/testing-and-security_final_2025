@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { z } from "zod";
-import { useRouter } from "vue-router";
+import { RouterLink, useRouter } from "vue-router";
 import { loginSchema, type LoginInput } from "../validation/loginSchema";
 import { useAuthStore } from "../store/auth";
 
@@ -109,6 +109,14 @@ async function handleSubmit() {
                     {{ loading ? "Logging in..." : "Login" }}
                 </button>
             </form>
+
+            <p>Don't have a account?</p>
+            <div>
+                <RouterLink to="/create_user" custom v-slot="{ navigate }">
+                    <button @click="navigate" >make new account</button>
+                </RouterLink>
+                
+            </div>
         </div>
     </div>
 </template>

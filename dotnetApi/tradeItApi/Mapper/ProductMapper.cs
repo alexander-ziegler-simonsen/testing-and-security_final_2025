@@ -1,0 +1,15 @@
+using tradeItApi.Models.OutputDto;
+using tradeItApi.Models.InputDto;
+using tradeItApi.Models.Data;
+using Riok.Mapperly.Abstractions;
+
+namespace tradeItApi.Mapper;
+
+[Mapper]
+public partial class ProductMapper
+{
+    public partial ProductOutput ProductToProductOutput(Product product);
+    public partial Product ProductInputToProduct(ProductInput product);
+    public partial List<ProductOutput> ProductListToProductOutputList(List<Product> products);
+
+}

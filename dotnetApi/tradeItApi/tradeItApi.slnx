@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="../testing/testing.csproj" Id="de9471fb-3644-4432-9f84-b5671b13643b" />
+  <Project Path="tradeItApi.csproj" />
+</Solution>

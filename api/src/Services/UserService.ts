@@ -1,28 +1,15 @@
-import { Prisma } from "../generated/prisma/client";
-import { MainPrisma } from "../lib/MainPrisma";
-import {
-    UserResponsePublicSchema,
-    UserRegisterRequestPublicDTO, UserUpdatePublicDTO,
-    UserRegisterInternalSchema,
-    UserRegisterInternalDTO
-} from "../schemas/UserSchema";
-import { hashPassword } from "../utils/auth";
+// import { Prisma } from "../generated/prisma/client";
+// import { MainPrisma } from "../lib/MainPrisma";
 
 import { db } from "../lib/MainDrizzle";
 import { users } from "../db/schema";
 import { eq } from "drizzle-orm";
 import { createInsertSchema, createSelectSchema, createUpdateSchema } from 'drizzle-zod';
 
-        const tempUser = {
-            username: input.username,
-            hashedpassword: tempHashedPass,
-            salt: tempSalt,
-            firstname: input.firstname,
-            lastname: input.lastname,
-            email: input.email,
-            phone: input.phone,
-            signedup: tempDateNow
-        }
+const selectSchema = createSelectSchema(users);
+const selectIdSchema = createSelectSchema(users).pick({id: true});
+const addSchema = createInsertSchema(users);
+const updateSchema = createUpdateSchema(users);
 
 export const createUser = async (input: any) => {
     const newUser = selectSchema.parse(input);
@@ -43,13 +30,14 @@ export const createUser = async (input: any) => {
 };
 
 export const getUsers = async () => {
-    const users = await MainPrisma.users.findMany();
-    return users.map((u) => UserResponsePublicSchema.parse(u));
+    const Users = await db.select().from(users);
+    return selectSchema.array().parse(Users);
 };
 
 export const getUserById = async (id: number) => {
-    const user = await MainPrisma.users.findUnique({ where: { id } });
-    return user ? UserResponsePublicSchema.parse(user) : null;
+    const userId = selectIdSchema.parse(id);
+    const oneUser = await db.select().from(users).where(eq(users.id, userId.id));
+    return selectSchema.parse(oneUser);
 };
 
 export const updateUser = async (id: number, data: any) => {
@@ -59,6 +47,7 @@ export const updateUser = async (id: number, data: any) => {
 };
 
 export const deleteUser = async (id: number) => {
-    const deletedUser = await MainPrisma.users.delete({ where: { id } });
-    return UserResponsePublicSchema.parse(deletedUser);
+    const deletedUser = selectIdSchema.parse(id);
+    const result = await db.delete(users).where(eq(users.id, deletedUser.id));
+    return result;
 }

@@ -1,5 +1,5 @@
-import { Prisma } from "../generated/prisma/client";
-import { MainPrisma } from "../lib/MainPrisma";
+//import { Prisma } from "../generated/prisma/client";
+//import { MainPrisma } from "../lib/MainPrisma";
 import { ProductCreateSchema, ProductResponseSchema, ProductCreateDTO, ProductUpdateDTO } from "../schemas/ProductSchema";
 import { db } from "../lib/MainDrizzle";
 import { products} from "../db/schema";
@@ -14,30 +14,13 @@ const addSchema = createInsertSchema(products);
 const updateSchema = createUpdateSchema(products);
 
 export const createProduct = async (input: ProductCreateDTO) => {
-    const newProduct = await MainPrisma.products.create({ data: input });
-    return ProductCreateSchema.parse(newProduct);
+    const newProduct = await addSchema.parse(input);
+    return await db.insert(products).values(newProduct);
 };
 
-export const getMyProducts = async (userId: number) => {
-    const products = await MainPrisma.products.findMany({
-        where: {
-            fk_user_id: userId,
-        },
-        include: {
-            ProductImages: {
-                select: {
-                    imagepath: true,
-                },
-            },
-        },
-    });
-
-    return products.map((pro) =>
-        ProductResponseSchema.parse({
-            ...pro,
-            images: pro.ProductImages.map((img) => img.imagepath),
-        })
-    );
+export const getProducts = async () => {
+    const Products = await db.select().from(products);
+    return selectSchema.array().parse(Products);
 };
 
 export const getProductById = async (id: number) => {
@@ -55,32 +38,37 @@ export const getMyProducts = async (user_id: number) => {
 };
 
 export const updateProduct = async (id: number, data: ProductUpdateDTO) => {
-    const updatedProduct = await MainPrisma.products.update({ where: { id }, data });
-    return ProductResponseSchema.parse(updatedProduct)
+    const updatedProduct = updateSchema.parse(data);
+    const newProdut = await db.update(products).set(updatedProduct).where(eq(products.id, id))
+    return selectSchema.parse(newProdut);
 };
 
 export const deleteProduct = async (id: number) => {
     // const deletedProduct = await MainPrisma.products.delete({ where: { id } });
     // return ProductResponseSchema.parse(deletedProduct);
 
-    try {
-        MainPrisma.$transaction(async (tx) => {
-            // delete everything that is connected to this post
-            await tx.comments.deleteMany({ where: { fk_product_id: id } });
-            await tx.productImages.deleteMany({ where: { fk_product_id: id } });
-            await tx.productFavorite.deleteMany({ where: { fk_product_id: id } });
+    const deletedProduct = selectIdSchema.parse(id);
+    const result = await db.delete(products).where(eq(products.id, deletedProduct.id));
+    return result;
 
-            // then delete the post
-            await tx.products.delete({ where: { id } });
-        });
+    // try {
+    //     MainPrisma.$transaction(async (tx) => {
+    //     // delete everything that is connected to this post
+    //     await tx.comments.deleteMany({where: {fk_product_id: id} });
+    //     await tx.productImages.deleteMany({where: {fk_product_id: id} });
+    //     await tx.productFavorite.deleteMany({where: {fk_product_id: id} });
 
-        return true;
-    } catch (err) {
-        if (
-            err instanceof Prisma.PrismaClientKnownRequestError && err.code === "P2025"
-        ) {
-            return false;
-        }
-        throw err;
-    }
+    //     // then delete the post
+    //     await tx.products.delete({where: {id} });
+    //     });
+
+    //     return true;
+    // } catch (err) {
+    //     if (
+    //         err instanceof Prisma.PrismaClientKnownRequestError && err.code === "P2025"
+    //     ) {
+    //         return false;
+    //     }
+    //     throw err;
+    // }
 }

@@ -37,13 +37,13 @@ export const SearchAdvanceHandler = async (req: Request, res: Response) => {
 
         const products = await SearchAdvanceProducts(parsedInput);
 
-        const output = products.map((pro) => ({
-            id: pro.id,
-            title: pro.title,
-            description: pro.description ?? "",
-            price: Number(pro.price),
+        const output = products?.map((pro) => ({
+            id: pro.product.id,
+            title: pro.product.title,
+            description: pro.product.description ?? "",
+            price: pro.product.price,
             // images: p.ProductImages.map((img) => img.imagepath),
-            images: pro.ProductImages.map((img) => img.imagepath)
+            images: pro.imagePath
         }));
 
         res.status(200).json(output);
