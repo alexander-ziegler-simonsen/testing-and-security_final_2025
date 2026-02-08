@@ -39,11 +39,11 @@ namespace tradeItApi.Controllers
 
         // POST api/<CommentController>
         [HttpPost]
-        public async Task<bool> Post([FromBody] CommentInput newComment)
+        public async Task<CommentOutput> Post([FromBody] CommentInput newComment)
         {
-            bool didItWork = await _commentService.CreateAsync(newComment);
+            CommentOutput result = await _commentService.CreateAsync(newComment);
 
-            return didItWork; 
+            return result; 
         }
 
         // PUT api/<CommentController>/5
