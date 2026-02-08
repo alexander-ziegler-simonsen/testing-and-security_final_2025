@@ -5,7 +5,7 @@ namespace tradeItApi.Models.InputDto;
 
 public partial class CommentInput
 {
-    public int id { get; set; }
+    //public int id { get; set; }
 
     public string content { get; set; } = null!;
 

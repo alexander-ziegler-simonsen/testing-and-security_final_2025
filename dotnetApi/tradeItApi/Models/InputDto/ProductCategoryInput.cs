@@ -5,7 +5,7 @@ namespace tradeItApi.Models.InputDto;
 
 public partial class ProductCategoryInput
 {
-    public int id { get; set; }
+    //public int id { get; set; }
 
     public string name { get; set; } = null!;
 

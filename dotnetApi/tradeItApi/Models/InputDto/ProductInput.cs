@@ -5,7 +5,7 @@ namespace tradeItApi.Models.InputDto;
 
 public partial class ProductInput
 {
-    public int id { get; set; }
+    //public int id { get; set; }
 
     public int? fk_user_id { get; set; }
 
