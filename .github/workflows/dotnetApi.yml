@@ -19,11 +19,11 @@ jobs:
                   dotnet-version: '10.0.x'
             
             - name: Restore
-              run: dotnet restore dotnetApi/tradeItApi.slnx
+              run: dotnet restore dotnetApi/tradeItApi/tradeItApi.slnx
 
             - name: Build
-              run: dotnet build dotnetApi/tradeItApi.slnx --no-restore --configuration Release
+              run: dotnet build dotnetApi/tradeItApi/tradeItApi.slnx --no-restore --configuration Release
 
 
             - name: Test
-              run: dotnet test dotnetApi/tradeItApi.slnx --no-build --configuration Release
+              run: dotnet test dotnetApi/tradeItApi/tradeItApi.slnx --no-build --configuration Release
