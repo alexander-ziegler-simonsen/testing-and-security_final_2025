@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using tradeItApi.Data;
 using tradeItApi.Mapper;
+using tradeItApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,11 +22,19 @@ builder.Services.AddScoped<ProductFavoriteMapper>();
 builder.Services.AddScoped<ProductImageMapper>();
 builder.Services.AddScoped<ProductMapper>();
 
+// adding services to scope
+builder.Services.AddScoped<CommentService>();
+builder.Services.AddScoped<ProductCategoryService>();
+builder.Services.AddScoped<ProductFavoriteService>();
+builder.Services.AddScoped<ProductImageService>();
+builder.Services.AddScoped<ProductService>();
+builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<AuthService>();
 
 
 // dbcontext 
 builder.Services.AddDbContext<AppDbContext>(options => 
-    options.UseNpgsql( builder.Configuration.GetConnectionString("DefaultConnection") ) 
+    options.UseNpgsql( builder.Configuration.GetConnectionString("Default") ) 
 );
 
 
