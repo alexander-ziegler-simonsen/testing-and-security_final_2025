@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { useAuthStore } from "../store/auth";
+import { useAuthStore } from "../../store/auth";
 
 const LoginResponseSchema = z.object({
     accessToken: z.string(),
