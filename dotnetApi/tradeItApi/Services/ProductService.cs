@@ -33,6 +33,16 @@ namespace tradeItApi.Services
             else
                 return _mapper.ProductToProductOutput(output);
         }
+
+        public async Task<List<ProductOutput>> GetByFkUserIdAsync(int userId)
+        {
+            List<Product> outputs = await _context.Products
+                .Where(c => c.fk_user_id == userId).ToListAsync();
+
+
+            return _mapper.ProductListToProductOutputList(outputs);
+        }
+
         public async Task<ProductOutput?> CreateAsync(ProductInput product)
         {
             Product newProduct = _mapper.ProductInputToProduct(product);

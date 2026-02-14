@@ -36,6 +36,24 @@ namespace tradeItApi.Services
                 return _mapper.CommentToCommentOutput(output);
         }
 
+        public async Task<List<CommentOutput>> GetByFkUserIdAsync(int userId)
+        {
+            List<Comment> outputs = await _context.Comments
+                .Where(c => c.fk_user_id == userId).ToListAsync();
+
+            
+            return _mapper.CommentListToCommentOutputList(outputs);
+        }
+
+        public async Task<List<CommentOutput>> GetByFkProductIdAsync(int productId)
+        {
+            List<Comment> outputs = await _context.Comments
+                .Where(c => c.fk_product_id == productId).ToListAsync();
+
+
+            return _mapper.CommentListToCommentOutputList(outputs);
+        }
+
         public async Task<CommentOutput?> CreateAsync(CommentInput comment)
         {
             Comment newComment = _mapper.CommentInputToComment(comment);

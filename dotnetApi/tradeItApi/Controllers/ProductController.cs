@@ -36,6 +36,15 @@ namespace tradeItApi.Controllers
             return output;
         }
 
+        // GET api/<ProductController>/5
+        [HttpGet("user/{id}")]
+        public async Task<IEnumerable<ProductOutput>> GetAllByUserId(int id)
+        {
+            List<ProductOutput> output = await _ProductService.GetByFkUserIdAsync(id);
+
+            return output;
+        }
+
         // POST api/<ProductController>
         [HttpPost]
         public async Task<ProductOutput> Post([FromBody] ProductInput newProduct)

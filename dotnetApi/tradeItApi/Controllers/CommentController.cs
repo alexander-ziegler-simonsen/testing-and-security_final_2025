@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json.Linq;
 using tradeItApi.Models.InputDto;
 using tradeItApi.Models.OutputDto;
 using tradeItApi.Services;
@@ -33,6 +32,24 @@ namespace tradeItApi.Controllers
         public async Task<CommentOutput> Get(int id)
         {
             CommentOutput output = await _commentService.GetByIdAsync(id);
+
+            return output;
+        }
+
+        // GET all comments with the same fk_product_id
+        [HttpGet("product/{id}")]
+        public async Task<IEnumerable<CommentOutput>> GetByProductId(int id)
+        {
+            List<CommentOutput> output = await _commentService.GetByFkProductIdAsync(id);
+
+            return output;
+        }
+
+        // GET all comments with the same fk_product_id
+        [HttpGet("user/{id}")]
+        public async Task<IEnumerable<CommentOutput>> GetByUserId(int id)
+        {
+            List<CommentOutput> output = await _commentService.GetByFkUserIdAsync(id);
 
             return output;
         }
