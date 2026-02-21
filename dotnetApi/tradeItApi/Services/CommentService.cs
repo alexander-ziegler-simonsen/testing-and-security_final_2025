@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Xml.Linq;
 using tradeItApi.Data;
 using tradeItApi.Mapper;
 using tradeItApi.Models.Data;
@@ -11,24 +12,26 @@ namespace tradeItApi.Services
     public class CommentService : ICommentService
     {
         private readonly AppDbContext _context;
+        private DbSet<Comment> comments;
         private CommentMapper _mapper;
 
         public CommentService(AppDbContext context)
         {
             _context = context;
+            comments = context.Comments;
             _mapper = new CommentMapper();
         }
 
         public async Task<List<CommentOutput>> GetAllAsync()
         {
-            List<Comment> output = await _context.Comments.AsNoTracking().ToListAsync();
+            List<Comment> output = await comments.AsNoTracking().ToListAsync();
 
             return _mapper.CommentListToCommentOutputList(output);
         }
 
         public async Task<CommentOutput?> GetByIdAsync(int id)
         {
-            Comment output = await _context.Comments.FindAsync(id);
+            Comment output = await comments.FindAsync(id);
 
             if (output == null)
                 return null;
@@ -38,8 +41,7 @@ namespace tradeItApi.Services
 
         public async Task<List<CommentOutput>> GetByFkUserIdAsync(int userId)
         {
-            List<Comment> outputs = await _context.Comments
-                .Where(c => c.fk_user_id == userId).ToListAsync();
+            List<Comment> outputs = await comments.Where(c => c.fk_user_id == userId).ToListAsync();
 
             
             return _mapper.CommentListToCommentOutputList(outputs);
@@ -47,8 +49,7 @@ namespace tradeItApi.Services
 
         public async Task<List<CommentOutput>> GetByFkProductIdAsync(int productId)
         {
-            List<Comment> outputs = await _context.Comments
-                .Where(c => c.fk_product_id == productId).ToListAsync();
+            List<Comment> outputs = await comments.Where(c => c.fk_product_id == productId).ToListAsync();
 
 
             return _mapper.CommentListToCommentOutputList(outputs);
@@ -70,7 +71,7 @@ namespace tradeItApi.Services
 
         public async Task<bool> UpdateAsync(int id, CommentInput comment)
         {
-            Comment dbComment = await _context.Comments.SingleAsync(c => c.id == id);
+            Comment dbComment = await _context.Comments.FindAsync(id);
 
             // can't find anything on that id
             if (dbComment == null)
@@ -93,13 +94,13 @@ namespace tradeItApi.Services
 
         public async Task<bool> DeleteAsync(int id)
         {
-            Comment dbComment = await _context.Comments.SingleAsync(c => c.id == id);
+            Comment dbComment = await _context.Comments.FindAsync(id);
 
             // can't find anything on that id
             if (dbComment == null)
                 return false;
 
-            _context.Remove(dbComment);
+            _context.Comments.Remove(dbComment);
 
             int didItWork = await _context.SaveChangesAsync();
 
