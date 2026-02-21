@@ -11,9 +11,9 @@
     "test:ui": "vitest --ui",
     "lint": "eslint --config config/eslint.config.ts . --ext .ts,.js,.vue",
     "lint:fix": "eslint --config config/eslint.config.ts . --ext .ts,.js,.vue --fix"
-
   },
   "dependencies": {
+    "axios": "^1.13.5",
     "pinia": "^3.0.4",
     "vue": "^3.5.24",
     "vue-router": "^4.6.3",

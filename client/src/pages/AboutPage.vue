@@ -1,4 +1,32 @@
 <script setup lang="ts">
+import { onMounted, ref } from 'vue';
+import { CommentSchema, CommentDTO } from '../schemas/CommentSchema';
+import { commentService } from '../services/commentService';
+
+const comments = ref<CommentDTO[]>([]);
+const loading = ref(false)
+const error = ref<string | null>(null)
+
+async function getData() {
+
+    loading.value = true
+    error.value = null
+
+    try {
+        let response = await commentService.getAll()
+        console.log("response", response);
+        comments.value = response;
+    } catch (err) {
+        error.value = "Failed to load items"
+    } finally {
+        loading.value = false
+    }
+
+    console.log(comments.value)
+}
+
+onMounted(getData);
+
 </script>
 
 <template>
@@ -39,6 +67,28 @@
                 normal, simple, and accessible for everyone.
             </p>
         </section>
+
+        <div>
+            <h1>Items</h1>
+
+            <!-- Loading state -->
+            <p v-if="loading">Loading...</p>
+
+            <!-- Error state -->
+            <p v-else-if="error">{{ error }}</p>
+
+            <!-- Data rendering -->
+            <ul v-else>
+                <li v-for="comment in comments">
+                    <p>{{ comment.content }}</p>
+                </li>
+            </ul>
+        </div>
+
+        <p>comments fetch here</p>
+        <p>
+            {{ comments.values }}
+        </p>
     </div>
 </template>
 

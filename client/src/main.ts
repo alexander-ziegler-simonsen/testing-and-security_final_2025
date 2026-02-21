@@ -5,7 +5,7 @@ import './water.min.css'
 import router from './router'
 import { createPinia } from 'pinia';
 import { useAuthStore } from './store/auth';
-import { fetchMe } from './services/meService';
+import { fetchMe } from './services/rod/meService';
 
 const app = createApp(App);
 const pinia = createPinia();
