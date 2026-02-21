@@ -14,14 +14,12 @@ you need to run these commands:
 ```shell
 pnpm install
 
-# generated the prisma files, that the api need to run
-pnpm run prisma_build
-# this step was in the 'postinstall' package.json script before, but that gave problems with the github actions pipeline
+
 ```
 
 then you can start it locally with "pnpm run dev".
 
-in case you are faced with some errors, you could try to run "pnpm run prisma_update", but you should really not need to do that.
+
 
 
 ## why this extra step ?

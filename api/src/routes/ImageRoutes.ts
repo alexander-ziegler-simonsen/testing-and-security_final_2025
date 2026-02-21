@@ -11,7 +11,8 @@ imageRoutes.post(
     uploadRateLimiter,
     authMiddleware,
     upload.single("image"),
-    uploadImageController
-);
+    uploadImageController);
+
+imageRoutes.get( "/", authMiddleware, uploadImageController );
 
 export default imageRoutes;

@@ -5,11 +5,11 @@ import { AuthRequest } from "../middleware/JwtGuard";
 
 export const login = async (req: Request, res: Response) => {
     try {
-        //console.log("RAW BODY:", req.body); 
+        console.log("RAW BODY:", req.body); 
 
         const { email, password } = loginSchema.parse(req.body);
 
-        //console.log("PARSED:", email, password);
+        console.log("PARSED:", email, password);
 
         const result = await loginService(email, password);
 

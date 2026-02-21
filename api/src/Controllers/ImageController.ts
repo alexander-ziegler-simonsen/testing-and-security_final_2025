@@ -19,3 +19,11 @@ export const uploadImageController = async (req: Request, res: Response) => {
 
     res.status(201).json(image);
 };
+
+// export const getImageHandler = async (req: Request, res: Response) => {
+//     // no path
+//     if (!req.imagePath) {
+//         return res.status(401).json({ message: "Unauthorized" });
+//     }
+// };
+
