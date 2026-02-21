@@ -1,10 +1,11 @@
 import { z } from "zod";
 
 export const CommentSchema = z.object({
-    text: z.string().min(1),
-    date: z.string().min(1),
-    userId: z.number(),
-    visabity: z.boolean()
+    id: z.number(),
+    content: z.string().min(1),
+    fk_product_id: z.number(),
+    fk_user_id: z.number(),
+    _public: z.boolean()
 });
 
 export type CommentDTO = z.infer<typeof CommentSchema>;

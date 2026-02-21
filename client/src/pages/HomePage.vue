@@ -2,17 +2,17 @@
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import ItemCard from "../components/ItemCard.vue";
-import { ProductSchema, ProductDTO } from "../schemas/ProductSchema";
+import { ProductSchema, ProductDTO, ProductSearchDTO, ProductSearchSchema } from "../schemas/ProductSchema";
 import { z } from "zod";
 
-const products = ref<ProductDTO[]>([]);
+const products = ref<ProductSearchDTO[]>([]);
 const loading = ref(true);
 const error = ref<string | null>(null);
 
 const router = useRouter();
-const ProductListSchema = z.array(ProductSchema);
+const ProductListSchema = z.array(ProductSearchSchema);
 
-const pickRandom = (items: ProductDTO[], count: number) => {
+const pickRandom = (items: ProductSearchDTO[], count: number) => {
     return [...items]
         .sort(() => 0.5 - Math.random())
         .slice(0, count);

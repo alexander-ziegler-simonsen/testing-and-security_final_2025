@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import ItemCard from "../components/ItemCard.vue";
-import { ProductDTO, ProductSchema } from "../schemas/ProductSchema";
+import { ProductDTO, ProductSchema, ProductSearchDTO, ProductSearchSchema } from "../schemas/ProductSchema";
 import { z } from "zod";
 // import { onMounted } from "vue";
 import { useRouter } from "vue-router";
@@ -16,11 +16,11 @@ const maxPrice = ref<number | null>(null);
 const sortBy = ref<"date" | "price">("date");
 const sortOrder = ref<"asc" | "desc">("desc");
 
-const products = ref<ProductDTO[]>([]);
+const products = ref<ProductSearchDTO[]>([]);
 const loading = ref(false);
 const error = ref<string | null>(null);
 
-const ProductListSchema = z.array(ProductSchema);
+const ProductListSchema = z.array(ProductSearchSchema);
 
 
 const router = useRouter();

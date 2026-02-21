@@ -1,8 +1,12 @@
 export async function isPasswordPwned(password: string): Promise<boolean> {
+    console.log("the raw password",password);
     // first we take the user inputted password and hash it (SHA-1)
     const encoder = new TextEncoder();
     const data = encoder.encode(password);
     const hashBuffer = await crypto.subtle.digest("SHA-1", data);
+
+    console.log("the hashed password",hashBuffer);
+
 
     const hashArray = Array.from(new Uint8Array(hashBuffer));
     const hashHex = hashArray
@@ -10,6 +14,9 @@ export async function isPasswordPwned(password: string): Promise<boolean> {
         .join("")
         .toUpperCase();
 
+    console.log("the hashed  2 password",hashArray);
+
+    console.log("the hashed  3 password",hashHex);
     //console.log("the hashed password", hashHex);
 
     // HaveIBeenPawned only need the first 5 characters from the hash values    
@@ -25,6 +32,7 @@ export async function isPasswordPwned(password: string): Promise<boolean> {
 
 
     const body = await res.text();
+    console.log("hibp?",body);
     const lines = body.split("\n");
 
     for (const line of lines) {

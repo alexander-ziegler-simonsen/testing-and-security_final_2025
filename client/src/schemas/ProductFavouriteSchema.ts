@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const UserSchema = z.object({
+export const ProductFavouriteSchema = z.object({
     id: z.number(),
     title: z.string().min(1),
     description: z.string().min(1),
@@ -8,4 +8,4 @@ export const UserSchema = z.object({
     price: z.string().transform((val) => Number(val)),
 });
 
-export type UserDTO = z.infer<typeof UserSchema>;
+export type ProductFavouriteDTO = z.infer<typeof ProductFavouriteSchema>;

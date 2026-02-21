@@ -68,10 +68,11 @@ async function handleSubmit() {
 
 <template>
     <h1>Create your own account here at 'TradeIt'</h1>
-    <p><small><small><small><small>
-                        by filling out the forms below, you are signing away your human rights and giving us ownership
-                        of you and everything you own. If you can read this, don't tell anyone, we will know.
-                    </small></small></small></small></p>
+    <p>
+        <small><small><small><small>
+        by filling out the forms below, you are signing away your human rights and giving us ownership of you and everything you own. If you can read this, don't tell anyone, we will know.
+        </small></small></small></small>
+    </p>
     <form @submit.prevent="handleSubmit">
         <div>
             <label>Firstname</label>
@@ -126,16 +127,16 @@ async function handleSubmit() {
         </button>
     </form>
 
-            <div>
-            <h1>temp setup</h1>
-            <p>was password pawned: {{ wasItPawned }}</p>
-        </div>
-        <div>
-            <p>Don't have a account, click the link below to create one</p>
-            <nav>
-                <RouterLink id="btnCreateUser" to="/create_user">create new account</RouterLink>
-            </nav>
-        </div>
+    <div>
+        <h1>temp setup</h1>
+        <p>was password pawned: {{ wasItPawned }}</p>
+    </div>
+    <div>
+        <p>Don't have a account, click the link below to create one</p>
+        <nav>
+            <RouterLink id="btnCreateUser" to="/create_user">create new account</RouterLink>
+        </nav>
+    </div>
 </template>
 
 <style scoped>
