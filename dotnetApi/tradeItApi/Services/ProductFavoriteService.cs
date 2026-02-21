@@ -36,6 +36,15 @@ namespace tradeItApi.Services
                 return _mapper.ProductFavoriteToProductFavoriteOutput(output);
         }
 
+        public async Task<List<ProductFavoriteOutput>> GetByFkUserIdAsync(int userId)
+        {
+            List<ProductFavorite> outputs = await _context.ProductFavorites
+                .Where(c => c.fk_user_id == userId).ToListAsync();
+
+
+            return _mapper.ProductFavoriteListToProductFavoriteOutputList(outputs);
+        }
+
         public async Task<ProductFavoriteOutput?> CreateAsync(ProductFavoriteInput ProductFavorite)
         {
             ProductFavorite newProductFavorite = _mapper.ProductFavoriteInputToProductFavorite(ProductFavorite);
@@ -52,13 +61,13 @@ namespace tradeItApi.Services
 
         public async Task<bool> DeleteAsync(int id)
         {
-            ProductFavorite dbProductFavorite = await _context.ProductFavorites.SingleAsync(c => c.id == id);
+            ProductFavorite dbProductFavorite = await _context.ProductFavorites.FindAsync(id);
 
             // can't find anything on that id
             if (dbProductFavorite == null)
                 return false;
 
-            _context.Remove(dbProductFavorite);
+            _context.ProductFavorites.Remove(dbProductFavorite);
 
             int didItWork = await _context.SaveChangesAsync();
 

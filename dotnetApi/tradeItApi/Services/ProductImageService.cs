@@ -48,7 +48,7 @@ namespace tradeItApi.Services
         }
         public async Task<bool> UpdateAsync(int id, ProductImageInput productImage)
         {
-            ProductImage dbProductImage = await _context.ProductImages.SingleAsync(c => c.id == id);
+            ProductImage dbProductImage = await _context.ProductImages.FindAsync(id);
 
             // can't find anything on that id
             if (dbProductImage == null)
@@ -70,13 +70,13 @@ namespace tradeItApi.Services
         }
         public async Task<bool> DeleteAsync(int id)
         {
-            ProductImage dbProductImage = await _context.ProductImages.SingleAsync(c => c.id == id);
+            ProductImage dbProductImage = await _context.ProductImages.FindAsync(id);
 
             // can't find anything on that id
             if (dbProductImage == null)
                 return false;
 
-            _context.Remove(dbProductImage);
+            _context.ProductImages.Remove(dbProductImage);
 
             int didItWork = await _context.SaveChangesAsync();
 

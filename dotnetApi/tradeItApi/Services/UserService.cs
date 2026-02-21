@@ -49,7 +49,7 @@ namespace tradeItApi.Services
         }
         public async Task<bool> UpdateInfoAsync(int id, UserInput user)
         {
-            User dbUser = await _context.Users.SingleAsync(c => c.id == id);
+            User dbUser = await _context.Users.FindAsync(id);
 
             // can't find anything on that id
             if (dbUser == null)
@@ -77,13 +77,13 @@ namespace tradeItApi.Services
         }
         public async Task<bool> DeleteAsync(int id)
         {
-            User dbUser = await _context.Users.SingleAsync(c => c.id == id);
+            User dbUser = await _context.Users.FindAsync(id);
 
             // can't find anything on that id
             if (dbUser == null)
                 return false;
 
-            _context.Remove(dbUser);
+            _context.Users.Remove(dbUser);
 
             int didItWork = await _context.SaveChangesAsync();
 
