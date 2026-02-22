@@ -1,4 +1,4 @@
-name: API local tests
+name: API unit tests
 on:
     push:
         branches: [main, master]

@@ -1,14 +1,14 @@
 services:
   api:
     build:
-      context: ./api/
+      context: ./dotnetApi/
       dockerfile: Dockerfile
-      # args:
-      #   DATABASE_URL: ${DATABASE_URL}
     env_file:
       - .env
+    environment:
+      ConnectionStrings__Default: Host=${DB_HOST};Port=${INTERNAL_POSTGRES_PORT};Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
     ports:
-      - "${API_PORT}:3000"
+      - "${API_PORT}:8080"
     depends_on:
       - db
     networks:
