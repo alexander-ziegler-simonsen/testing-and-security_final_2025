@@ -42,14 +42,6 @@ namespace tradeItApi.Services
                 .OrderBy(p => Guid.NewGuid()).Include(e => e.ProductImages)
                 .Take(6).ToListAsync();
 
-            foreach (var item in outputs)
-            {
-                Console.Write("title ", item.title);
-                Console.Write(" | images ", item.ProductImages.FirstOrDefault());
-
-                Console.WriteLine("");
-            }
-
             return _cardMapper.ProductListToProductCardOutputList(outputs);
         }
 
