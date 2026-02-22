@@ -12,11 +12,13 @@ namespace tradeItApi.Services
     {
         private readonly AppDbContext _context;
         private ProductMapper _mapper;
+        private ProductCardMapper _cardMapper;
 
         public ProductService(AppDbContext context)
         {
             _context = context;
             _mapper = new ProductMapper();
+            _cardMapper = new ProductCardMapper();
         }
         public async Task<List<ProductOutput>> GetAllAsync()
         {
@@ -32,6 +34,23 @@ namespace tradeItApi.Services
                 return null;
             else
                 return _mapper.ProductToProductOutput(output);
+        }
+
+        public async Task<List<ProductCardOuput>> get6RandomProductsAsync()
+        {
+            List<Product> outputs = await _context.Products
+                .OrderBy(p => Guid.NewGuid()).Include(e => e.ProductImages)
+                .Take(6).ToListAsync();
+
+            foreach (var item in outputs)
+            {
+                Console.Write("title ", item.title);
+                Console.Write(" | images ", item.ProductImages.FirstOrDefault());
+
+                Console.WriteLine("");
+            }
+
+            return _cardMapper.ProductListToProductCardOutputList(outputs);
         }
 
         public async Task<List<ProductOutput>> GetByFkUserIdAsync(int userId)

@@ -8,6 +8,11 @@ namespace tradeItApi.Services.Interfaces
         Task<List<ProductOutput>> GetAllAsync();
         Task<ProductOutput?> GetByIdAsync(int id);
         Task<ProductOutput?> CreateAsync(ProductInput product);
+
+        Task<List<ProductCardOuput>> get6RandomProductsAsync();
+
+        Task<List<ProductOutput>> GetByFkUserIdAsync(int userId);
+
         Task<bool> UpdateAsync(int id, ProductInput product);
         Task<bool> DeleteAsync(int id);
     }

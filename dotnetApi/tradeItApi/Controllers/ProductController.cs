@@ -36,6 +36,15 @@ namespace tradeItApi.Controllers
             return output;
         }
 
+        // GET api/<ProductController>/random
+        [HttpGet("random/")]
+        public async Task<IEnumerable<ProductCardOuput>> GetRandomsProductsAsync()
+        {
+            List<ProductCardOuput> output = await _ProductService.get6RandomProductsAsync();
+
+            return output;
+        }
+
         // GET api/<ProductController>/5
         [HttpGet("user/{id}")]
         public async Task<IEnumerable<ProductOutput>> GetAllByUserId(int id)
