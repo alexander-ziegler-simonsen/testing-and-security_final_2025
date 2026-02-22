@@ -1,5 +1,6 @@
+import '@testing-library/jest-dom';
 import { render, fireEvent } from '@testing-library/vue';
-import HomePage from '../pages/HomePage.vue';
+import HomePage from './HomePage.vue';
 
 test('increments counter on click', async () => {
     const { getByText } = render(HomePage);
