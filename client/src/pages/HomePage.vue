@@ -2,39 +2,33 @@
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import ItemCard from "../components/ItemCard.vue";
-import { ProductSchema, ProductDTO, ProductSearchDTO, ProductSearchSchema } from "../schemas/ProductSchema";
+import { ProductCardDTO, ProductCardSchema } from "../schemas/ProductSchema";
 import { z } from "zod";
+import { productService } from "../services/productService";
 
-const products = ref<ProductSearchDTO[]>([]);
+const products = ref<ProductCardDTO[]>([]);
 const loading = ref(true);
 const error = ref<string | null>(null);
 
 const router = useRouter();
-const ProductListSchema = z.array(ProductSearchSchema);
+//const ProductListSchema = z.array(ProductSearchSchema);
+const ProductCardListSchema = z.array(ProductCardSchema);
 
-const pickRandom = (items: ProductSearchDTO[], count: number) => {
-    return [...items]
-        .sort(() => 0.5 - Math.random())
-        .slice(0, count);
-};
 
-const fetchRandomProducts = async () => {
+const getRandomProducts = async () => {
     try {
         loading.value = true;
         error.value = null;
 
-        const res = await fetch(
-            "http://localhost:3000/api/search/v2?sortBy=date&sortOrder=desc"
-        );
+        const res = await productService.fetchRandomProducts();
 
-        if (!res.ok) {
+        if (!res) {
             throw new Error("Failed to load products");
         }
 
-        const json = await res.json();
-        const allProducts = ProductListSchema.parse(json);
+        const allProducts = ProductCardListSchema.parse(res);
 
-        products.value = pickRandom(allProducts, 3);
+        products.value = allProducts;
     } catch (err) {
         console.error(err);
         error.value = "Could not load products";
@@ -47,7 +41,7 @@ const goToProduct = (id: number) => {
     router.push(`/product/${id}`);
 };
 
-onMounted(fetchRandomProducts);
+onMounted(getRandomProducts);
 </script>
 
 <template>
@@ -65,7 +59,7 @@ onMounted(fetchRandomProducts);
         :key="product.id"
         :title="product.title"
         :price="product.price"
-        :image-url="product.images[0]"
+        :image-url="product.url"
         @click="goToProduct(product.id)"
       />
     </div>

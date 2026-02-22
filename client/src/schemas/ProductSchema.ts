@@ -21,9 +21,10 @@ export const ProductSearchSchema = z.object({
 export type ProductSearchDTO = z.infer<typeof ProductSearchSchema>;
 
 export const ProductCardSchema = z.object({
+    id: z.number(),
     title: z.string().min(1),
-    images: z.url(),
-    price: z.string().transform((val) => Number(val)),
+    url: z.string(),
+    price: z.number(),
 });
 
-export type ProductCardDTO = z.infer<typeof ProductSchema>;
+export type ProductCardDTO = z.infer<typeof ProductCardSchema>;
