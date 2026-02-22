@@ -2,10 +2,8 @@ import { z } from "zod";
 
 export const ProductCategorySchema = z.object({
     id: z.number(),
-    title: z.string().min(1),
-    description: z.string().min(1),
-    images: z.array(z.string()).default([]),
-    price: z.string().transform((val) => Number(val)),
+    name: z.string(),
+    fk_pc_parant_id: z.number().nullable()
 });
 
 export type ProductCategoryDTO = z.infer<typeof ProductCategorySchema>;

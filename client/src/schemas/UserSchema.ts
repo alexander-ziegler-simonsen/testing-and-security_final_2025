@@ -2,10 +2,7 @@ import { z } from "zod";
 
 export const UserSchema = z.object({
     id: z.number(),
-    title: z.string().min(1),
-    description: z.string().min(1),
-    images: z.array(z.string()).default([]),
-    price: z.string().transform((val) => Number(val)),
+    username: z.string().min(4)
 });
 
 export type UserDTO = z.infer<typeof UserSchema>;

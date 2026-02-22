@@ -2,10 +2,8 @@ import { z } from "zod";
 
 export const ProductFavouriteSchema = z.object({
     id: z.number(),
-    title: z.string().min(1),
-    description: z.string().min(1),
-    images: z.array(z.string()).default([]),
-    price: z.string().transform((val) => Number(val)),
+    fk_user_id: z.number(),
+    fk_product_id: z.number()
 });
 
 export type ProductFavouriteDTO = z.infer<typeof ProductFavouriteSchema>;
