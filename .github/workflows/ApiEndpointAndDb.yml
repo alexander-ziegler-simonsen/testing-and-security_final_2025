@@ -39,7 +39,7 @@ jobs:
             - name: Install PostgreSQL client
               run: sudo apt-get update && sudo apt-get install -y postgresql-client
 
-            # 3 Wait for DB (real login check, not just port)
+            # 3 Wait for DB
             - name: Wait for PostgreSQL
               run: |
                   until PGPASSWORD=${{ secrets.POSTGRES_PASSWORD }} psql \

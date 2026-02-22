@@ -1,5 +1,5 @@
 # ---------- Build stage ----------
-FROM mcr.microsoft.com/dotnet/sdk:10.0-preview AS build
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /App
 
 # Copy both projects
@@ -16,7 +16,7 @@ COPY . .
 RUN dotnet publish tradeItApi/tradeItApi.csproj -c Release -o /app/publish
 
 # ---------- Runtime stage ----------
-FROM mcr.microsoft.com/dotnet/aspnet:10.0-preview AS runtime
+FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
 WORKDIR /App
 
 # Copy published output from build stage
