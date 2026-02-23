@@ -37,12 +37,8 @@ namespace tradeItApi.Services
         {
             ProductImage newProductImage = _mapper.ProductImageInputToProductImage(productImage);
 
-            Console.WriteLine("output id", newProductImage.id);
-
             await _context.ProductImages.AddAsync(newProductImage);
-            bool didItWork = _context.SaveChangesAsync().IsCompletedSuccessfully;
-
-            Console.WriteLine("output id - after", newProductImage.id);
+            int didItWork = await _context.SaveChangesAsync();
 
             return _mapper.ProductImageToProductImageOutput(newProductImage);
         }

@@ -59,12 +59,8 @@ namespace tradeItApi.Services
         {
             Comment newComment = _mapper.CommentInputToComment(comment);
 
-            Console.WriteLine("output id", newComment.id);
-
             await _context.Comments.AddAsync(newComment);
-            bool didItWork = _context.SaveChangesAsync().IsCompletedSuccessfully;
-
-            Console.WriteLine("output id - after", newComment.id);
+            int didItWork = await _context.SaveChangesAsync();
 
             return _mapper.CommentToCommentOutput(newComment);
         }

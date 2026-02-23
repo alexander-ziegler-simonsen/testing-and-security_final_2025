@@ -38,12 +38,8 @@ namespace tradeItApi.Services
         {
             User newUser = _mapper.UserInputToUser(user);
 
-            Console.WriteLine("output id", newUser.id);
-
             await _context.Users.AddAsync(newUser);
-            bool didItWork = _context.SaveChangesAsync().IsCompletedSuccessfully;
-
-            Console.WriteLine("output id - after", newUser.id);
+            int didItWork = await _context.SaveChangesAsync();
 
             return _mapper.UserToUserOutput(newUser);
         }

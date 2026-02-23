@@ -58,12 +58,8 @@ namespace tradeItApi.Services
         {
             Product newProduct = _mapper.ProductInputToProduct(product);
 
-            Console.WriteLine("output id", newProduct.id);
-
             await _context.Products.AddAsync(newProduct);
-            bool didItWork = _context.SaveChangesAsync().IsCompletedSuccessfully;
-
-            Console.WriteLine("output id - after", newProduct.id);
+            int didItWork = await _context.SaveChangesAsync();
 
             return _mapper.ProductToProductOutput(newProduct);
         }

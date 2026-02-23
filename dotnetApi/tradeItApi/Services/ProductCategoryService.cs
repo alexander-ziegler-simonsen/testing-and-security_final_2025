@@ -37,12 +37,8 @@ namespace tradeItApi.Services
         {
             ProductCategory newProductCategory = _mapper.ProductCategoryInputToProductCategory(productCategory);
 
-            Console.WriteLine("output id", newProductCategory.id);
-
             await _context.ProductCategories.AddAsync(newProductCategory);
-            bool didItWork = _context.SaveChangesAsync().IsCompletedSuccessfully;
-
-            Console.WriteLine("output id - after", newProductCategory.id);
+            int didItWork = await _context.SaveChangesAsync();
 
             return _mapper.ProductCategoryToProductCategoryOutput(newProductCategory);
         }

@@ -49,12 +49,8 @@ namespace tradeItApi.Services
         {
             ProductFavorite newProductFavorite = _mapper.ProductFavoriteInputToProductFavorite(ProductFavorite);
 
-            Console.WriteLine("output id", newProductFavorite.id);
-
             await _context.ProductFavorites.AddAsync(newProductFavorite);
-            bool didItWork = _context.SaveChangesAsync().IsCompletedSuccessfully;
-
-            Console.WriteLine("output id - after", newProductFavorite.id);
+            int didItWork = await _context.SaveChangesAsync();
 
             return _mapper.ProductFavoriteToProductFavoriteOutput(newProductFavorite);
         }
