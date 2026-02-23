@@ -1,4 +1,11 @@
 {
-    "key": "baseUrl",
-    "value": "http://localhost:5129"
+    "id": "github-env",
+    "name": "GitHub",
+    "values": [
+        {
+            "key": "baseUrl",
+            "value": "http://localhost:5129",
+            "enabled": true
+        }
+    ]
 }
