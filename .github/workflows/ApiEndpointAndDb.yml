@@ -21,14 +21,8 @@ jobs:
                     POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
                 ports:
                     - 5432:5432
-
         env:
-            ConnectionStrings__DefaultConnection: >
-                Host=localhost;
-                Port=5432;
-                Database=${{ secrets.POSTGRES_DB }};
-                Username=${{ secrets.POSTGRES_USER }};
-                Password=${{ secrets.POSTGRES_PASSWORD }}
+            ConnectionStrings__DefaultConnection: Host=localhost;Port=5432;Database=${{ secrets.POSTGRES_DB }};Username=${{ secrets.POSTGRES_USER }};Password=${{ secrets.POSTGRES_PASSWORD }}
 
         steps:
             # 1 Checkout FIRST
